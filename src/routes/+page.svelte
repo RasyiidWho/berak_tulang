@@ -4,38 +4,24 @@
 	import berak from '$lib/assets/berak.png';
 	// import { InputChip } from '@skeletonlabs/skeleton';
 	export let data;
-	import { myStringStore } from '$lib/stores';
 	import { InputChip } from '@skeletonlabs/skeleton';
+	import { AlasanBerak } from "$lib/stores";
 
-	let arrayBerak = [];
+	let storeAlasanBerak = [];
 
-	storeBerak.subscribe((v) => {
-		arrayBerak = v;
+	// Mek update terus
+	// Templekke neng bind mek value'ne keupdate terus secara realtime
+	// contoh: bind:value={storeAlasanBerak}
+	AlasanBerak.subscribe((v) => {
+		storeAlasanBerak = v;
 	});
 
-	// 	function updateString(value) {
-	//     myStringStore.update(() => value);
+	// Fungsi nggo ngupdate, sangkutke neng button nggo update value'ne
+	// Templekke neng on:, contoh: on:click={() => updateAlasanBerak(AlasanBerak)}
+	const updateAlasanBerak = (v) => {
+		AlasanBerak.update(() => v);
+	};
 
-	//   }
-
-	// function addBerak() {
-	// 	 simpanBerak.set((simpanBerak) => simpanBerak);
-	// }
-
-	// berakx.subscribe((value) => {
-	// 	berakx = value;
-	// });
-
-	// noteStore.update((notes) => notes.filter((n) => n.id !== noteId));
-
-	// function setBerak() {
-	// 	berakx.update((berakx) => berakx);
-	// }
-
-	// berakx.subscribe((v) => {
-	// 	beraks = v;
-	// });
-	// let alasan: string;
 </script>
 
 <div class="container">
@@ -46,18 +32,27 @@
 			<div class="m-5">
 				<!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
 				<!-- <h1 class="h1">Isine: {newValue}</h1> -->
-
 				<!-- <input class="input" type="text" on:change="{() => updateString(newValue)}" bind:value="{newValue}"> -->
-
 				<InputChip
-					bind:value={arrayBerak}
+					bind:value={storeAlasanBerak}
 					name="chips"
-					on:add={() => updateString(arrayBerak)}
-					placeholder="Enter any value..."
+					on:add={() => updateAlasanBerak(storeAlasanBerak)}
+					placeholder="Kenapa kamu ingin sekali berak?"
 				/>
-
 				<!-- <b class="btn !bg-transparent" on:click={() => updateString(newValue)}>aaaaaaaaaaaaaaa</b> -->
 			</div>
 		</div>
 	</div>
 </div>
+
+
+<style>
+	* {
+		-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+	}
+</style>
