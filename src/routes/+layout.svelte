@@ -34,7 +34,7 @@
 	};
 
 	let valueSingle: string = 'books';
-	import './global.css';
+	import '$lib/assets/global.css';
 </script>
 
 <div class="card" data-popup="popupFeatured">
