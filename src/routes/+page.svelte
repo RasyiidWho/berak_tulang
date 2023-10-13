@@ -39,7 +39,7 @@
 	// async function printAnime(id: number) {
 	// 	const anime = await jikanClient.anime.get(id);
 	// 	console.log('anime: ' + JSON.stringify(anime));
-	// 	animeData.set(anime);
+	// 	animeData.data.set(anime);
 	// 	console.log('animeData: ' + JSON.stringify($animeData));
 	// 	anime ? (wibuAnime = anime.title) : (wibuAnime = 'Anime Not Found');
 	// 	anime ? (wibuGambar = anime.image.jpg?.default?.href) : (wibuAnime = 'Anime Not Found');
@@ -57,17 +57,20 @@
 		await sleep(5000);
 		try {
 			isLoading = false;
-			const response = await jikanClient.anime.get(id);
-			animeData.set(response);
+			const response = await fetch('https://api.jikan.moe/v4/anime/' + id);
+			if (response.ok) {
+				const data = await response.json();
+				animeData.set(data);
+			} else {
+				console.error('Failed to fetch data from the API');
+			}
 			console.log('animeData: ' + JSON.stringify($animeData));
-			response ? (wibuAnime = $animeData.title) : (wibuAnime = 'Anime Not Found');
+			response ? (wibuAnime = $animeData.data.titles[0].title) : (wibuAnime = 'Anime Not Found');
 			response
-				? (wibuGambar = $animeData.image.jpg?.default?.href)
+				? (wibuGambar = $animeData.data.images.webp.image_url)
 				: (wibuAnime = 'Anime Not Found');
 			await sleep(3000);
-			 isLoadingImage = false;
-			
-			
+			isLoadingImage = false;
 		} catch (error) {
 			isLoading = false;
 			console.error('Error fetching anime data:', error);
@@ -103,16 +106,15 @@
 
 	$: wibuID = arrayAlasanBerak.slice(-1).pop();
 	$: printAnimePromise(wibuID);
-	$: isLoading
-	$: isLoadingImage
+	$: isLoading;
+	$: isLoadingImage;
 	// $: printAnime(wibuID);
-
 </script>
 
 <div class="container">
 	<div class="flex w-screen">
 		<div class="m-auto grid grid-cols-1 gap-10 text-center pt-10">
-				<!-- {#if $animeData}
+			<!-- {#if $animeData}
 				<b class="btn !bg-transparent "><img in:fade={{ duration: 500 }} out:fade={{ duration: 500 }} out:fade src={wibuGambar} alt="logo"/></b>
 				<h2>ID: {wibuID}, Anime: {wibuAnime}</h2>
 			{:else}
@@ -120,7 +122,13 @@
 				<h2 class="placeholder bg-secondary-50 mx-32" />
 				<h2>ID: {wibuID}, Anime: {wibuAnime}</h2>
 			{/if} -->
-			<b transition:fade class="btn !bg-transparent h-96"><img class="{isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}" src={wibuGambar} alt="logo" /></b>
+			<b transition:fade class="btn !bg-transparent h-96"
+				><img
+					class="{isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}"
+					src={wibuGambar}
+					alt="logo"
+				/></b
+			>
 			<h1 class="h1 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1>
 
 			<div class="m-5">

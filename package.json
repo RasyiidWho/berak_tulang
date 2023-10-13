@@ -41,7 +41,6 @@
 		"@floating-ui/dom": "^1.5.3",
 		"@shineiichijo/marika": "^3.0.0",
 		"compiler": "^0.1.2",
-		"jikan4.js": "^1.5.8",
 		"lucide-svelte": "^0.286.0"
 	}
 }
