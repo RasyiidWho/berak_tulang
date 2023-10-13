@@ -56,11 +56,13 @@
 		animeData.set(0);
 		await sleep(5000);
 		try {
-			isLoading = false;
-			const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + "&limit=1");
+			const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=1');
 			if (response.ok) {
+				isLoading = false;
 				const data = await response.json();
 				animeData.set(data);
+				await sleep(3000);
+				isLoadingImage = false;
 			} else {
 				console.error('Failed to fetch data from the API');
 			}
@@ -69,8 +71,6 @@
 			response
 				? (wibuGambar = $animeData.data[0].images.webp.image_url)
 				: (wibuAnime = 'Anime Not Found');
-			await sleep(3000);
-			isLoadingImage = false;
 		} catch (error) {
 			isLoading = false;
 			// console.error('Error fetching anime data:', error);
