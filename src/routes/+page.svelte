@@ -2,7 +2,6 @@
 	import berak from '$lib/assets/berak.png';
 	import { InputChip } from '@skeletonlabs/skeleton';
 	import { AlasanBerak } from '$lib/stores';
-	import Jikan from 'jikan4.js';
 	import { writable } from 'svelte/store';
 	import { sleep } from '$lib/sleep';
 	import { fade, fly } from 'svelte/transition';
