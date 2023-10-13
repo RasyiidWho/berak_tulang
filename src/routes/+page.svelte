@@ -33,7 +33,6 @@
 
 	let animeData = writable(0);
 
-	const jikanClient = new Jikan.Client();
 
 	// async function printAnime(id: number) {
 	// 	const anime = await jikanClient.anime.get(id);
