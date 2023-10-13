@@ -48,32 +48,32 @@
 	let isLoading = false;
 	let isLoadingImage = false;
 
-	async function printAnimePromise(id) {
+	async function printAnimePromise(name) {
 		isLoading = true;
 		isLoadingImage = true;
-		console.log('animeData: ' + JSON.stringify(animeData));
-		console.log('tulung executed');
+		// console.log('animeData: ' + JSON.stringify(animeData));
+		// console.log('tulung executed');
 		animeData.set(0);
 		await sleep(5000);
 		try {
 			isLoading = false;
-			const response = await fetch('https://api.jikan.moe/v4/anime/' + id);
+			const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + "&limit=1");
 			if (response.ok) {
 				const data = await response.json();
 				animeData.set(data);
 			} else {
 				console.error('Failed to fetch data from the API');
 			}
-			console.log('animeData: ' + JSON.stringify($animeData));
-			response ? (wibuAnime = $animeData.data.titles[0].title) : (wibuAnime = 'Anime Not Found');
+			// console.log('animeData: ' + JSON.stringify($animeData));
+			response ? (wibuAnime = $animeData.data[0].titles[0].title) : (wibuAnime = 'Anime Not Found');
 			response
-				? (wibuGambar = $animeData.data.images.webp.image_url)
+				? (wibuGambar = $animeData.data[0].images.webp.image_url)
 				: (wibuAnime = 'Anime Not Found');
 			await sleep(3000);
 			isLoadingImage = false;
 		} catch (error) {
 			isLoading = false;
-			console.error('Error fetching anime data:', error);
+			// console.error('Error fetching anime data:', error);
 		}
 	}
 
