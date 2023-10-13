@@ -54,23 +54,26 @@
 		// console.log('animeData: ' + JSON.stringify(animeData));
 		// console.log('tulung executed');
 		animeData.set(0);
-		await sleep(5000);
+		// await sleep(5000);
 		try {
 			const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=1');
 			if (response.ok) {
-				isLoading = false;
 				const data = await response.json();
 				animeData.set(data);
-				await sleep(3000);
+				response
+					? (wibuAnime = $animeData.data[0].titles[0].title)
+					: (wibuAnime = 'Anime Not Found');
+				response
+					? (wibuGambar = $animeData.data[0].images.webp.image_url)
+					: (wibuAnime = 'Anime Not Found');
+				// await sleep(5000);
+				await sleep(2000);
+				isLoading = false;
 				isLoadingImage = false;
 			} else {
 				console.error('Failed to fetch data from the API');
 			}
 			// console.log('animeData: ' + JSON.stringify($animeData));
-			response ? (wibuAnime = $animeData.data[0].titles[0].title) : (wibuAnime = 'Anime Not Found');
-			response
-				? (wibuGambar = $animeData.data[0].images.webp.image_url)
-				: (wibuAnime = 'Anime Not Found');
 		} catch (error) {
 			isLoading = false;
 			// console.error('Error fetching anime data:', error);
