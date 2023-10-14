@@ -3,7 +3,7 @@
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
   import { fade } from 'svelte/transition';
-  import { getModalStore } from '@skeletonlabs/skeleton';
+  import { Ratings, getModalStore } from '@skeletonlabs/skeleton';
   import { animeData, animeNamex, animeID } from '$lib/stores';
 
   const modalStore = getModalStore();
@@ -11,6 +11,7 @@
 
   let wibuAnime = 'Tell your friend your list!';
   let wibuGambar;
+  let wibuRating = 10;
   let wibuID;
   let inputPopupDemo: string = '';
 
@@ -65,6 +66,7 @@ animeID.subscribe((v) => {
         const datos = data.data;
         response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
         response ? (wibuGambar = datos.images.webp.image_url) : (wibuAnime = 'Anime Not Found');
+        response ? (wibuRating = datos.score) : (wibuRating = 10);
         // console.log("data.images.webp.image_url: " + JSON.stringify(datos.mal_id))
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
         await sleep(2000);
@@ -106,6 +108,7 @@ animeID.subscribe((v) => {
   $: isLoading;
   $: isLoadingImage;
   // $: printAnime(wibuID);
+
 </script>
 
 <div class="container {$modalStore[0] ? 'blur-3xl' : ''}">
@@ -122,6 +125,14 @@ animeID.subscribe((v) => {
       
       <b transition:fade class="btn !bg-transparent h-96"><img class="rounded-md {isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}" src={wibuGambar} alt="logo" /></b>
       <h1 class="h1 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1>
+      <div class="{isLoading ? 'animate-pulse blur-xl' : ''}">
+        <Ratings value={wibuRating} max={10} interactive>
+          <svelte:fragment slot="empty">🌚</svelte:fragment>
+          <svelte:fragment slot="half">🌘</svelte:fragment>
+          <svelte:fragment slot="full">🌝</svelte:fragment>
+        </Ratings>
+      </div>
+      
         <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
       <div class="m-5">
         <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
