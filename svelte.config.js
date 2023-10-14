@@ -21,11 +21,11 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		// adapter: adapter()
 		adapter: adapter(),
-		vite: {
-			optimizeDeps: {
-			  include: ['lodash.get', 'lodash.isequal', 'lodash.clonedeep']
-			}
-		}
+		// vite: {
+		// 	optimizeDeps: {
+		// 	  include: ['lodash.get', 'lodash.isequal', 'lodash.clonedeep']
+		// 	}
+		// }
 	}
 };
 export default config;
