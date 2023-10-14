@@ -2,14 +2,11 @@
   import '../app.postcss';
   import logo from '$lib/assets/berak.png';
   import { AlignRight, Fingerprint, Home, Search } from 'lucide-svelte';
-  import Debouncer from 'svelte-debouncer';
   import '$lib/assets/global.css';
-
-  import { onMount } from 'svelte';
-
   import { initializeStores } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { get, writable } from 'svelte/store';
+  import { debounce } from "ts-debounce";
 
   // Floating UI for Popups
   import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -55,8 +52,35 @@
 
   const animeDataStore = writable([]);
 
-  async function searchAnimePromise(name) {
-    // console.log('searchAnimePromise terpanggil, name: ' + name);
+
+
+  // async function searchAnimePromise(name) {
+  //   // console.log('searchAnimePromise terpanggil, name: ' + name);
+  //   animeData.set(0);
+  //   try {
+  //       const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=5');
+  //     if (response.ok && name) {
+  //       const animeDatas = await response.json();
+  //       const datos = animeDatas.data
+  //       animeDataStore.set(datos);
+  //       animeData.set(datos)
+  //       // await sleep(5000);
+  //       // console.log(JSON.stringify($animeDataStore));
+  //       // await sleep(2000);
+  //     } else {
+  //       console.error('Failed to fetch data from the API');
+  //       return false
+  //     }
+  //     // console.log('animeData: ' + JSON.stringify($animeData));
+  //   } catch (error) {
+  //     console.log(error);
+  //     return false
+  //   }
+  //   return true;
+  // }
+
+
+  const searchAnimePromise = async (name) => {
     animeData.set(0);
     try {
         const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=5');
@@ -70,7 +94,7 @@
         // await sleep(2000);
       } else {
         console.error('Failed to fetch data from the API');
-        return false
+        return true
       }
       // console.log('animeData: ' + JSON.stringify($animeData));
     } catch (error) {
@@ -78,23 +102,13 @@
       return false
     }
     return true;
-  }
+  };
 
-  // const search_debouncer = new Debouncer(searchAnimePromise, 2000);
-
-  // let luppa = [];
-  // const janlupa = animeData.subscribe((v) => {
-  //   animeName = v;
-  //   luppa = v;
-  // });
-
-  // const result_debouncer = new Debouncer(janlupa, 5000);
-
-  const search_debouncer = new Debouncer(searchAnimePromise, 1000);
+  // const debouncedFunction = debounce(searchAnimePromise, 500, {isImmediate: true});
 
 
-
-  $: search_debouncer.debounce(animeName);
+  $: debounce(searchAnimePromise);
+  // $: debouncedFunction
   // $: animeData
   // $: animeName
   // $:  animeNamex;
@@ -105,7 +119,7 @@
     <section class="md:w-[600px] w-96 w-full text-token mt-10 card">
       <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
         <!-- <div class="input-group-shim"><Search name="search" /></div> -->
-        <input type="search" placeholder="Anything mate?" bind:value={animeName} on:input={() => search_debouncer.debounce(animeName)} />
+        <input placeholder="Anything mate?" bind:value={animeName} />
       </div>
       <ul class="list">
         <!-- {JSON.stringify($animeData)} -->

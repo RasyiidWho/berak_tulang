@@ -48,6 +48,8 @@
   let isLoading = false;
   let isLoadingImage = false;
 
+
+
 animeID.subscribe((v) => {
   printAnimePromise(v);
 });
