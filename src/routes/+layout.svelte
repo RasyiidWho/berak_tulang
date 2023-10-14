@@ -133,6 +133,16 @@
     animeNameSedurunge = animeName
   }
 
+  function animeIDSet(data) {
+    if(data !== $animeData){
+      animeID.set(data.mal_id) 
+      console.log("data sama")
+    } else {
+       console.log("data sama")
+    }
+}
+
+// animeID.set(data.mal_id)
 
   // $: debouncedFunction
   // $: animeData
@@ -167,7 +177,7 @@
               <li
                 class="btn button-base-styles"
                 on:click={() => {
-                  modalStore.close(), animeID.set(data.mal_id), console.log("ngestore")
+                  modalStore.close(), animeIDSet(data), console.log("ngestore")
                 }}
               >
                 <Avatar src={data.images.jpg.small_image_url} width="w-12" />
