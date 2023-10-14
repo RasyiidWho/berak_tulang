@@ -47,7 +47,7 @@
 
   let isLoading = false;
   let isLoadingImage = false;
-
+  let isLoadingImageHTML;
 
 
 animeID.subscribe((v) => {
@@ -59,8 +59,8 @@ animeID.subscribe((v) => {
     isLoadingImage = true;
     // console.log('animeData: ' + JSON.stringify(animeData));
     // console.log('tulung executed');
-    animeData.set(0);
-    // await sleep(5000);
+    // animeData.set(0);
+    await sleep(5000);
     try {
       const response = await fetch('https://api.jikan.moe/v4/anime/' + id);
       if (response.ok) {
@@ -73,8 +73,9 @@ animeID.subscribe((v) => {
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
         await sleep(2000);
         isLoading = false;
-        await sleep(5000);
+        await sleep(3000);
         isLoadingImage = false;
+        // await sleep(5000);
       } else {
         console.error('Failed to fetch data from the API');
       }
@@ -84,6 +85,7 @@ animeID.subscribe((v) => {
       console.error('Error fetching anime data:', error);
     }
   }
+
 
   // $ / bind:value={} Gunane nganggo eksekusi secara langsung nek ono perubahan.
   // secara realtime & reaktif
@@ -103,7 +105,6 @@ animeID.subscribe((v) => {
   // <h1>Iki bakal keupdate terus: {aAkhir}</h1>
   // <h1>Iki variable awal e: {aOri}</h1>
 
-
   // $: wibuID = arrayAlasanBerak.slice(-1).pop();
   // $: printAnimePromise(wibuID);
   // $: printAnimePromise(animeIDx);
@@ -113,29 +114,33 @@ animeID.subscribe((v) => {
 
 </script>
 
-<div class="container {$modalStore[0] ? 'blur-3xl' : ''}">
+
+<!-- 
+██╗░░██╗████████╗███╗░░░███╗██╗░░░░░
+██║░░██║╚══██╔══╝████╗░████║██║░░░░░
+███████║░░░██║░░░██╔████╔██║██║░░░░░
+██╔══██║░░░██║░░░██║╚██╔╝██║██║░░░░░
+██║░░██║░░░██║░░░██║░╚═╝░██║███████╗
+╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
+-->
+
+
+<div class="container {$modalStore[0] ? 'blur-3xl' : ''} pt-5">
   <div class="flex w-screen">
-    <div class="m-auto grid grid-cols-1 gap-10 text-center pt-10">
-      <!-- {#if $animeData}
-				<b class="btn !bg-transparent "><img in:fade={{ duration: 500 }} out:fade={{ duration: 500 }} out:fade src={wibuGambar} alt="logo"/></b>
-				<h2>ID: {wibuID}, Anime: {wibuAnime}</h2>
-			{:else}
-				<b transition:fade class="btn !bg-transparent"><img in:fade={{ duration: 500 }} out:fade={{ duration: 500 }} out:fade src={wibuGambar} alt="logo" /></b>
-				<h2 class="placeholder bg-secondary-50 mx-32" />
-				<h2>ID: {wibuID}, Anime: {wibuAnime}</h2>
-			{/if} -->
-      
-      <b transition:fade class="btn !bg-transparent h-96"><img class="rounded-md {isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}" src={wibuGambar} alt="logo" /></b>
-      <h1 class="h1 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1>
-      <div class="{isLoading ? 'animate-pulse blur-xl' : ''}">
-        <Ratings value={wibuRating} max={10} interactive>
+    <div class="m-auto grid grid-cols-1 gap-10 text-center pt-32">
+      <b transition:fade class="btn !bg-transparent h-96 -z-50">
+        <img bind:this={isLoadingImageHTML} class="md:w-[400px] w-[2000px] rounded-md {isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}" src={wibuGambar} alt="logo" />
+      </b>
+      <h1 class="h1 md:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1>
+      <div class={isLoading ? 'animate-pulse blur-xl' : ''}>
+        <!-- <Ratings value={wibuRating} max={10} interactive>
           <svelte:fragment slot="empty">🌚</svelte:fragment>
           <svelte:fragment slot="half">🌘</svelte:fragment>
           <svelte:fragment slot="full">🌝</svelte:fragment>
-        </Ratings>
+        </Ratings> -->
       </div>
-      
-        <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
+
+      <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
       <div class="m-5">
         <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
         <!-- <h1 class="h1">Isine: {newValue}</h1> -->
