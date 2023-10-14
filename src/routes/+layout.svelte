@@ -102,7 +102,7 @@
 
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
-    <section class="w-full text-token mt-10 card">
+    <section class="md:w-[600px] w-96 w-full text-token mt-10 card">
       <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
         <!-- <div class="input-group-shim"><Search name="search" /></div> -->
         <input type="search" placeholder="Anything mate?" bind:value={animeName} on:input={() => search_debouncer.debounce(animeName)} />
