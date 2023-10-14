@@ -1,10 +1,8 @@
 <script lang="ts">
   import berak from '$lib/assets/berak.png';
   import { AlasanBerak } from '$lib/stores';
-  import { writable } from 'svelte/store';
   import { sleep } from '$lib/sleep';
   import { fade } from 'svelte/transition';
-  import { InputChip } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { animeData, animeNamex, animeID } from '$lib/stores';
 

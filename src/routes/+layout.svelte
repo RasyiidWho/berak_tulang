@@ -9,8 +9,6 @@
 
   import { initializeStores } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
-  import { getImageLink } from '$lib/images';
-  import { sleep } from '$lib/sleep';
   import { get, writable } from 'svelte/store';
 
   // Floating UI for Popups
