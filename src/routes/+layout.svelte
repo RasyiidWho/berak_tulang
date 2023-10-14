@@ -93,21 +93,19 @@
         // console.log(JSON.stringify($animeDataStore));
         // await sleep(2000);
       } else {
+        console.log("animeData: " + animeData)
         console.error('Failed to fetch data from the API');
-        return true
       }
       // console.log('animeData: ' + JSON.stringify($animeData));
     } catch (error) {
       console.log(error);
-      return false
     }
-    return true;
   };
 
   // const debouncedFunction = debounce(searchAnimePromise, 500, {isImmediate: true});
 
 
-  $: debounce(searchAnimePromise);
+  $: debounce(searchAnimePromise(animeName));
   // $: debouncedFunction
   // $: animeData
   // $: animeName
