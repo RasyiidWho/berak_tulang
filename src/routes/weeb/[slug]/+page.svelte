@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Dots from './../../../../node_modules/svelte-carousel/src/components/Dots/Dots.svelte';
   import berak from '$lib/assets/berak.png';
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
@@ -21,7 +22,7 @@
   let isLoading = false;
   let isLoadingImage = false;
   let isLoadingImageHTML;
-  let timeHorizontal = 'Details';
+  let timeHorizontal: number = 1;
 
   // Nganggo gawe data JSON opo array opo sakarepmu,
   // Sek penting isine iso diubah-ubah nganggo
@@ -78,7 +79,7 @@
         const dataChar = await response2.json();
         anime = data.data;
         animeChar = dataChar.data;
-        console.log(animeChar)
+        console.log(animeChar);
         // response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuGambar = datos.images.webp.image_url) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuRating = datos.score) : (wibuRating = 10);
@@ -137,8 +138,13 @@
   // $: wibuID = arrayAlasanBerak.slice(-1).pop();
   // $: printAnimePromise(wibuID);
   // $: printAnimePromise(animeIDx);
+
   $: isLoading;
   $: isLoadingImage;
+  $: console.log('timeHorizontal: ' + timeHorizontal);
+  $: if (timeHorizontal == 1) {
+    console.log('aktirrrrrrrrrrrrr');
+  }
   // $: anime
   // $: printAnime(wibuID);
   // printAnimePromise(1)
@@ -155,9 +161,9 @@
 
 <div class="container {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12">
   <div class="flex flex-col md:flex-row">
-    <img bind:this={isLoadingImageHTML} class="fixed -z-10 md:w-[1400px] opacity-10 w-[4000px] rotate-90 rounded-md motion-safe:animate-pulse blur-3xl" src={anime?.images.webp.image_url} alt="logo" />
+    <!-- <img bind:this={isLoadingImageHTML} class=" -z-10 md:w-[1400px] opacity-30 w-[4000px] rounded-md motion-safe:animate-spin-slow blur-[500px]" src={anime?.images.webp.image_url} alt="logo" /> -->
     <div class="w-full md:w-1/2 md:ml-5">
-      <div class="text-center">
+      <div class="text-center fixed">
         <b transition:fade class="btn !bg-transparent -z-50">
           <img
             bind:this={isLoadingImageHTML}
@@ -168,7 +174,7 @@
             alt="logo"
           />
         </b>
-        <div class="flex content-center justify-center">
+        <div class="flex content-center justify-center w-full md:w-[450px]">
           <h1 class="h1">{anime?.titles[0].title ? anime?.titles[0].title : 'Anime Not Found'}</h1>
           <h1 class="h1 absolute -mt-5 opacity-50">カウボーイビバップ</h1>
           <h1 class="h1 absolute mt-10 opacity-10">カウボーイビバップ</h1>
@@ -184,78 +190,78 @@
       </div>
     </div>
     <div class="w-full md:w-4/5 mt-6 p-4">
-      <div class="md:visible collapse -ml-2">
-        <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-          <RadioItem bind:group={timeHorizontal} name="time" value="Details">💌 Anime // Details</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value="Actors">🥙 Anime // Characters</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value="Episodes">🍣 Anime // Episodes</RadioItem>
-        </RadioGroup>
-      </div>
-      <div class="pt-5">
-        <div class="flex">
-          <h1 class="h1">Details</h1>
-          <h1 class="h1 absolute opacity-20">カウボーイビバップ</h1>
+        <div class="md:visible collapse -ml-2">
+          <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+            <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Anime // Details</RadioItem>
+            <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Anime // Characters</RadioItem>
+            <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Anime // Episodes</RadioItem>
+          </RadioGroup>
         </div>
+        <div class="pt-5 {timeHorizontal !== 1 ? 'hidden animate-none' : 'animate-unblur-05'}">
+          <div class="flex">
+            <h1 class="h1">Details</h1>
+            <h1 class="h1 absolute opacity-20">カウボーイビバップ</h1>
+          </div>
 
-        <div class="pt-4">
-          <span class="chip variant-filled-primary mb-2">{anime ? '⛄ ' + anime.season + ' ' + anime.year : 'Anime Not Found'}</span>
+          <div class="pt-4">
+            <span class="chip variant-filled-primary mb-2">{anime ? '⛄ ' + anime.season + ' ' + anime.year : 'Anime Not Found'}</span>
 
-          {#if anime}
-            {#if anime.studio === 'object'}
-              {#each anime.studio as studios}
-                <span class="chip variant-filled-primary mb-2">{'📹 ' + studios.name}</span>
-              {/each}
-            {:else}
-              <span class="chip variant-filled-primary mb-2">{'📹 ' + anime.studios[0].name}</span>
+            {#if anime}
+              {#if anime.studio === 'object'}
+                {#each anime.studio as studios}
+                  <span class="chip variant-filled-primary mb-2">{'📹 ' + studios.name}</span>
+                {/each}
+              {:else}
+                <span class="chip variant-filled-primary mb-2">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span>
+              {/if}
             {/if}
-          {/if}
-        </div>
-        <div class="pt-2 space-x-2">
-          {#if anime}
-            {#each anime.genres as genre}
-              <span class="chip variant-soft-primary">
-                {genre.name}
-              </span>
-            {/each}
-          {/if}
-        </div>
-        <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
-          <!-- <span class="chip variant-outline-primary p-2" on:click={doSomething}>
-             <span class="font-black text-3xl">7.5</span>
-          </span> -->
-          <Accordion>
-            <AccordionItem open>
-              <svelte:fragment slot="lead">🐾</svelte:fragment>
-              <svelte:fragment slot="summary">Synopsys</svelte:fragment>
-              <svelte:fragment slot="content">{anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}</svelte:fragment>
-            </AccordionItem>
-            <AccordionItem open>
-              <svelte:fragment slot="lead">🎒</svelte:fragment>
-              <svelte:fragment slot="summary">Background</svelte:fragment>
-              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
-            </AccordionItem>
-            <AccordionItem>
-              <svelte:fragment slot="lead">🐒</svelte:fragment>
-              <svelte:fragment slot="summary">Characters</svelte:fragment>
-              <svelte:fragment slot="content">
-                <!-- {#if browser} -->
-                <div class="md:max-w-2xl max-w-md text-center">
-                  <Carousel particlesToShow={8} particlesToScroll={8} bind:this={carousel} arrows={false} infinite={false}>
-                    {#if animeChar}
-                      {#each animeChar as image}
-                   <img class="m-1 rounded-lg w-32" src={image.character.images.webp.image_url} alt="imagex" />
-                      {/each}
-                    {/if}
-                  </Carousel>
-                </div>
+          </div>
+          <div class="pt-2 space-x-2">
+            {#if anime}
+              {#each anime.genres as genre}
+                <span class="chip variant-soft-primary">
+                  {genre.name}
+                </span>
+              {/each}
+            {/if}
+          </div>
+          <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
+            <!-- <span class="chip variant-outline-primary p-2" on:click={doSomething}>
+               <span class="font-black text-3xl">7.5</span>
+            </span> -->
+            <Accordion>
+              <AccordionItem open>
+                <svelte:fragment slot="lead">🐾</svelte:fragment>
+                <svelte:fragment slot="summary">Synopsys</svelte:fragment>
+                <svelte:fragment slot="content">{anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}</svelte:fragment>
+              </AccordionItem>
+              <AccordionItem open>
+                <svelte:fragment slot="lead">🎒</svelte:fragment>
+                <svelte:fragment slot="summary">Background</svelte:fragment>
+                <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
+              </AccordionItem>
+              <AccordionItem>
+                <svelte:fragment slot="lead">🐒</svelte:fragment>
+                <svelte:fragment slot="summary">Characters</svelte:fragment>
+                <svelte:fragment slot="content">
+                  <!-- {#if browser} -->
+                  <div class="md:max-w-2xl max-w-md text-center">
+                    <Carousel dots={false} particlesToShow={8} particlesToScroll={8} bind:this={carousel} arrows={false} infinite={false}>
+                      {#if animeChar}
+                        {#each animeChar as image}
+                          <img class="m-1 rounded-lg w-32" src={image.character.images.webp.image_url} alt="imagex" />
+                        {/each}
+                      {/if}
+                    </Carousel>
+                  </div>
 
-                <!-- {/if} -->
-              </svelte:fragment>
-            </AccordionItem>
-            <!-- ... -->
-          </Accordion>
+                  <!-- {/if} -->
+                </svelte:fragment>
+              </AccordionItem>
+              <!-- ... -->
+            </Accordion>
+          </div>
         </div>
-      </div>
     </div>
   </div>
   <!-- <div class="flex w-screen">

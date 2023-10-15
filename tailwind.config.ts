@@ -9,7 +9,37 @@ export default {
 	darkMode: 'class',
 	content: ['./src/**/*.{html,js,svelte,ts}', join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')],
 	theme: {
-		extend: {},
+		extend: {
+			animation: {
+				'spin-slow': 'spin 12s linear infinite',
+				'deblur-05': 'deblur 0.5s',
+			  },
+			  keyframes: {
+				wiggle: {
+				  '0%, 100%': { transform: 'rotate(-3deg)' },
+				  '50%': { transform: 'rotate(3deg)' },
+				},
+				'bounce-10s': {
+					'0%': {
+					  transform: 'translateY(0)',
+					},
+					'50%': {
+					  transform: 'translateY(-200px)',
+					},
+					'100%': {
+					  transform: 'translateY(0)',
+					},
+				},
+				'deblur': {
+					'0%': {
+					  filter: 'blur(60px)',
+					},
+					'100%': {
+					  filter: 'blur(0)',
+					},
+				  },
+			  }
+		},
 	},
 	plugins: [
 		forms,

@@ -104,6 +104,7 @@ animeID.subscribe((v) => {
 
   // <h1>Iki bakal keupdate terus: {aAkhir}</h1>
   // <h1>Iki variable awal e: {aOri}</h1>
+  
 
   // $: wibuID = arrayAlasanBerak.slice(-1).pop();
   // $: printAnimePromise(wibuID);

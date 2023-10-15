@@ -131,6 +131,10 @@
       debouncedFunction(animeName)
     }
     animeNameSedurunge = animeName
+    if (event.key === 'F1') {
+      // Execute your command here
+      triggerModal();
+    }
   }
 
   function animeIDSet(data) {
@@ -151,6 +155,7 @@
   $: console.log('isUpdated: ' + isUpdated);
   $: isUpdated;
 </script>
+
 
 <!-- 
 ██╗░░██╗████████╗███╗░░░███╗██╗░░░░░
@@ -203,7 +208,7 @@
   </div>
 {/if}
 <Modal />
-
+<svelte:window on:keydown={handleKeyDown} />
 <!-- <AppShell>
   <svelte:fragment slot="header">
     <AppBar background="bg-transparent {$modalStore[0] ? 'blur-md' : ''}">
