@@ -11,14 +11,17 @@ export default {
 	theme: {
 		extend: {
 			animation: {
-				'spin-slow': 'spin 12s linear infinite',
+				'spin-slow': 'wiggle 3s linear infinite',
 				'pulse-slow': 'ping 1s linear infinite',
 				'unblur-05': 'unblur 0.5s',
 			  },
 			  keyframes: {
+				mbuhopo: {
+					'transform' : 'translateZ(0.0001px) rotateY(-14.1176470588deg)'
+				},
 				wiggle: {
-				  '0%, 100%': { transform: 'rotate(-3deg)' },
-				  '50%': { transform: 'rotate(3deg)' },
+				  '0%, 100%': { transform: 'rotate(-6deg)' },
+				  '50%': { transform: 'rotate(6deg)' },
 				},
 				'bounce-10s': {
 					'0%': {

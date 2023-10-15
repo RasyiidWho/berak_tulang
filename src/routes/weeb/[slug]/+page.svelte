@@ -12,10 +12,10 @@
   import Icon from '@iconify/svelte';
   import 'lazysizes';
   export let data;
-  
-// import a plugin
-import 'lazysizes/plugins/parent-fit/ls.parent-fit';
-    import { onMount } from 'svelte';
+
+  // import a plugin
+  import 'lazysizes/plugins/parent-fit/ls.parent-fit';
+  import { onMount } from 'svelte';
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -86,7 +86,7 @@ import 'lazysizes/plugins/parent-fit/ls.parent-fit';
         // response ? (wibuRating = datos.score) : (wibuRating = 10);
         // console.log("data.images.webp.image_url: " + JSON.stringify(datos.mal_id))
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
-        // await sleep(2000);
+        await sleep(2000);
         isLoading = false;
         // await sleep(3000);
         isLoadingImage = false;
@@ -120,18 +120,18 @@ import 'lazysizes/plugins/parent-fit/ls.parent-fit';
 
   let elemMovies: HTMLDivElement;
 
-function multiColumnLeft(): void {
-	let x = elemMovies.scrollWidth;
-	if (elemMovies.scrollLeft !== 0) x = elemMovies.scrollLeft - elemMovies.clientWidth;
-	elemMovies.scroll(x, 0);
-}
+  function multiColumnLeft(): void {
+    let x = elemMovies.scrollWidth;
+    if (elemMovies.scrollLeft !== 0) x = elemMovies.scrollLeft - elemMovies.clientWidth;
+    elemMovies.scroll(x, 0);
+  }
 
-function multiColumnRight(): void {
-	let x = 0;
-	// -1 is used because different browsers use different methods to round scrollWidth pixels.
-	if (elemMovies.scrollLeft < elemMovies.scrollWidth - elemMovies.clientWidth - 1) x = elemMovies.scrollLeft + elemMovies.clientWidth;
-	elemMovies.scroll(x, 0);
-}
+  function multiColumnRight(): void {
+    let x = 0;
+    // -1 is used because different browsers use different methods to round scrollWidth pixels.
+    if (elemMovies.scrollLeft < elemMovies.scrollWidth - elemMovies.clientWidth - 1) x = elemMovies.scrollLeft + elemMovies.clientWidth;
+    elemMovies.scroll(x, 0);
+  }
 
   // $ / bind:value={} Gunane nganggo eksekusi secara langsung nek ono perubahan.
   // secara realtime & reaktif
@@ -161,13 +161,13 @@ function multiColumnRight(): void {
   $: if (timeHorizontal == 1) {
     console.log('aktirrrrrrrrrrrrr');
   }
-  $: console.log("slug: " + data.slug)
+  $: console.log('slug: ' + data.slug);
 
   onMount(() => {
     isLoading = true;
     isLoadingImage = true;
-    console.log("slug:" + data.slug)
-    printAnimePromise(data.slug)
+    console.log('slug:' + data.slug);
+    printAnimePromise(data.slug);
   });
   // $: anime
   $: printAnimePromise(data.slug);
@@ -183,22 +183,22 @@ function multiColumnRight(): void {
   ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
   -->
 
-<div class="container {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12">
-  <div class="flex flex-col md:flex-row">
-    <img bind:this={isLoadingImageHTML} class="lazyload fixed -z-10 md:w-[1000px] opacity-30 w-[3000px] rounded-md animate-spin-slow blur-[500px]" src={anime?.images.webp.image_url} alt="logo" />
-    <div class="w-full md:w-1/2 md:ml-5">
-      <div class="text-center fixed">
+<div class="container {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
+  <div class="flex flex-col lg:flex-row">
+    <img bind:this={isLoadingImageHTML} class="lazyload fixed -z-10 lg:w-[1000px] opacity-10 w-[3000px] rounded-md animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} alt="logo" />
+    <div class="w-full lg:w-1/2 lg:ml-5">
+      <div class="text-center lg:fixed relative">
         <b transition:fade class="btn !bg-transparent -z-50">
           <img
             bind:this={isLoadingImageHTML}
-            class="lazyload md:w-[370px] w-[250px] rounded-md
+            class="lazyload lg:w-[370px] w-[250px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
             alt="logo"
           />
         </b>
-        <div class="flex content-center justify-center w-full md:w-[450px] -mt-2 z-50">
+        <div class="flex content-center justify-center w-full lg:w-[450px] -mt-2 z-50">
           <h2 class="h2 absolute">{anime?.titles[0].title ? anime?.titles[0].title : 'Anime Not Found'}</h2>
           <h2 class="h2 absolute opacity-20">カウボーイビバップ</h2>
           <h2 class="h2 absolute opacity-10">カウボーイビバップ</h2>
@@ -212,7 +212,7 @@ function multiColumnRight(): void {
             {/if}
           </div>
         </div>
-        <!-- <h1 class="h1 md:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1> -->
+        <!-- <h1 class="h1 lg:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1> -->
         <div class={isLoading ? 'animate-pulse blur-xl' : ''}>
           <!-- <Ratings value={wibuRating} max={10} interactive>
               <svelte:fragment slot="empty">🌚</svelte:fragment>
@@ -222,12 +222,12 @@ function multiColumnRight(): void {
         </div>
       </div>
     </div>
-    <div class="w-full md:w-4/5 mt-6 p-4">
-      <div class="md:visible collapse -ml-2">
+    <div class="w-full lg:w-3/4 xl:w-4/5 mt-6 p-4">
+      <div class="lg:visible collapse -ml-2">
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-          <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Anime // Details</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Anime // Characters</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Anime // Episodes</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Details</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Characters</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Episodes</RadioItem>
         </RadioGroup>
       </div>
       <div class="pt-5 {timeHorizontal !== 1 ? 'hidden animate-none' : 'animate-unblur-05'}">
@@ -236,25 +236,26 @@ function multiColumnRight(): void {
           <h1 class="h1 absolute opacity-20">カウボーイビバップ</h1>
         </div>
 
-        <div class="pt-4">
-          <span class="chip variant-filled-primary mb-2">{anime ? '⛄ ' + anime.season + ' ' + anime.year : 'Anime Not Found'}</span>
-
+        <div class="pt-2 space-x-2 flex">
           {#if anime}
             {#if anime.studio === 'object'}
               {#each anime.studio as studios}
-                <span class="chip variant-filled-primary mb-2">{'📹 ' + studios.name}</span>
-              {/each}
+              <div>
+                <span class="chip variant-soft-primary ml-0">{'📹 ' + studios.name}</span>
+              </div>
+                {/each}
             {:else}
-              <span class="chip variant-filled-primary mb-2">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span>
+            <div>
+                <span class="chip variant-soft-primary ml-0">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span>
+              </div>
             {/if}
-          {/if}
-        </div>
-        <div class="pt-2 space-x-2">
-          {#if anime}
+            <div>
+              <span class="chip variant-soft-primary ml-0">{anime.season}</span>
+            </div>
+            
             {#each anime.genres as genre}
-              <span class="chip variant-soft-primary">
-                {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}
-              </span>
+              <span class="chip variant-soft-primary ml-0">
+                {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}</span>
             {/each}
           {/if}
         </div>
@@ -268,14 +269,14 @@ function multiColumnRight(): void {
               <svelte:fragment slot="summary">Characters</svelte:fragment>
               <svelte:fragment slot="content">
                 <!-- {#if browser} -->
-                <!-- <div class="md:max-w-2xl max-w-lg text-center"> -->
-                  <!-- <Carousel dots={false} particlesToShow={5} particlesToScroll={5} bind:this={carousel} arrows={true} autoplay={true} infinite={true} swiping={false} initialPageIndex={1}> -->
-                    <!-- {#if animeChar}
+                <!-- <div class="lg:max-w-2xl max-w-lg text-center"> -->
+                <!-- <Carousel dots={false} particlesToShow={5} particlesToScroll={5} bind:this={carousel} arrows={true} autoplay={true} infinite={true} swiping={false} initialPageIndex={1}> -->
+                <!-- {#if animeChar}
                       {#each animeChar as image}
                         <img class=" m-1 rounded-lg h-12" src={image.character.images.webp.image_url} alt="imagex" />
                       {/each}
                     {/if} -->
-                  <!-- </Carousel> -->
+                <!-- </Carousel> -->
                 <!-- </div> -->
                 <!-- {/if} -->
 
@@ -287,13 +288,13 @@ function multiColumnRight(): void {
                   <!-- Carousel -->
                   <div bind:this={elemMovies} class="snap-x snap-mandatory scroll-smooth flex gap-2 pb-2 overflow-x-hidden">
                     {#if animeChar}
-                    {#each animeChar as image}
-                      {#if !image.character.images.webp.image_url.includes("questionmark")}
-                        <a target="_blank" class="shrink-0 w-[28%] snap-start">
-                        <img class="rounded-container-token hover:brightness-125" src={image.character.images.webp.image_url} alt="no" title="rrt" loading="lazy"/>
-                        </a>
+                      {#each animeChar as image}
+                        {#if !image.character.images.webp.image_url.includes('questionmark')}
+                          <a target="_blank" class="shrink-0 w-[28%] snap-start">
+                            <img class="rounded-container-token hover:brightness-125" src={image.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
+                          </a>
                         {/if}
-                    {/each}
+                      {/each}
                     {/if}
                   </div>
                   <!-- Button-Right -->
@@ -327,7 +328,7 @@ function multiColumnRight(): void {
               <svelte:fragment slot="summary">Synopsys</svelte:fragment>
               <svelte:fragment slot="content">
                 {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
-                </svelte:fragment>
+              </svelte:fragment>
             </AccordionItem>
             <AccordionItem>
               <svelte:fragment slot="lead">🎒</svelte:fragment>
