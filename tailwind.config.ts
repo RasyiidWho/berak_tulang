@@ -12,6 +12,7 @@ export default {
 		extend: {
 			animation: {
 				'spin-slow': 'spin 12s linear infinite',
+				'pulse-slow': 'ping 1s linear infinite',
 				'unblur-05': 'unblur 0.5s',
 			  },
 			  keyframes: {

@@ -1,12 +1,12 @@
 <script lang="ts">
   import '../app.postcss';
   import logo from '$lib/assets/berak.png';
-  import { AlignRight, Fingerprint, Home, Search } from 'lucide-svelte';
   import '$lib/assets/global.css';
   import { initializeStores } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { get, writable } from 'svelte/store';
   import { debounce } from 'ts-debounce';
+  import Icon from '@iconify/svelte';
 
   // Floating UI for Popups
   import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -169,7 +169,7 @@
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
     <section class="md:w-[500px] w-full text-token md:mt-40 mt-20 card">
-        <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anything mate?" bind:value={animeName} on:keydown={handleKeyDown} />
+        <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:keydown={handleKeyDown} />
         <ul class="list">
           <!-- {JSON.stringify($animeData)} -->
           {#if isUpdated}
@@ -233,8 +233,8 @@
 
 <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 p-5 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
   <RadioGroup>
-    <RadioItem active="" name="justify"><Home name="home" /></RadioItem>
-    <RadioItem active="" name="justify" on:click={() => triggerModal()}><Search name="search" /></RadioItem>
-    <RadioItem active="" name="justify"><Fingerprint name="home" /></RadioItem>
+    <RadioItem active="" name="justify"><Icon icon="ri:home-line" width="30"/></RadioItem>
+    <RadioItem active="" name="justify" on:click={() => triggerModal()}><Icon icon="ri:search-2-line" width="30"/></RadioItem>
+    <RadioItem active="" name="justify"><Icon icon="ri:menu-4-fill" width="30"/></RadioItem>
   </RadioGroup>
 </div>

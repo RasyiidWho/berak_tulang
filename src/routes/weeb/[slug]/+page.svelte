@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Dots from './../../../../node_modules/svelte-carousel/src/components/Dots/Dots.svelte';
   import berak from '$lib/assets/berak.png';
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
@@ -10,6 +9,8 @@
   import { browser } from '$app/environment';
   import { writable } from 'svelte/store';
   import { debounce } from 'ts-debounce';
+  import Icon from '@iconify/svelte';
+  
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -149,7 +150,6 @@
   // $: printAnime(wibuID);
   // printAnimePromise(1)
 </script>
-
 <!-- 
   ██╗░░██╗████████╗███╗░░░███╗██╗░░░░░
   ██║░░██║╚══██╔══╝████╗░████║██║░░░░░
@@ -161,13 +161,13 @@
 
 <div class="container {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12">
   <div class="flex flex-col md:flex-row">
-    <!-- <img bind:this={isLoadingImageHTML} class=" -z-10 md:w-[1400px] opacity-30 w-[4000px] rounded-md motion-safe:animate-spin-slow blur-[500px]" src={anime?.images.webp.image_url} alt="logo" /> -->
+    <img bind:this={isLoadingImageHTML} class="fixed -z-10 md:w-[1000px] opacity-30 w-[3000px] rounded-md animate-spin-slow blur-[500px]" src={anime?.images.webp.image_url} alt="logo" />
     <div class="w-full md:w-1/2 md:ml-5">
       <div class="text-center fixed">
         <b transition:fade class="btn !bg-transparent -z-50">
           <img
             bind:this={isLoadingImageHTML}
-            class="md:w-[420px] w-[300px] rounded-md
+            class="md:w-[370px] w-[250px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
@@ -178,6 +178,13 @@
           <h1 class="h1">{anime?.titles[0].title ? anime?.titles[0].title : 'Anime Not Found'}</h1>
           <h1 class="h1 absolute -mt-5 opacity-50">カウボーイビバップ</h1>
           <h1 class="h1 absolute mt-10 opacity-10">カウボーイビバップ</h1>
+          <div class="start-0 absolute rotate-45">
+            <Ratings value={3.5} max={5}>
+              <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="rgba(17, 34, 51, 0.5333333333333333)" /></svelte:fragment>
+              <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" /> </svelte:fragment>
+              <svelte:fragment slot="full"><Icon icon="solar:star-bold" /></svelte:fragment>
+          </Ratings>
+          </div>
         </div>
         <!-- <h1 class="h1 md:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1> -->
         <div class={isLoading ? 'animate-pulse blur-xl' : ''}>
@@ -230,16 +237,6 @@
                <span class="font-black text-3xl">7.5</span>
             </span> -->
             <Accordion>
-              <AccordionItem open>
-                <svelte:fragment slot="lead">🐾</svelte:fragment>
-                <svelte:fragment slot="summary">Synopsys</svelte:fragment>
-                <svelte:fragment slot="content">{anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}</svelte:fragment>
-              </AccordionItem>
-              <AccordionItem open>
-                <svelte:fragment slot="lead">🎒</svelte:fragment>
-                <svelte:fragment slot="summary">Background</svelte:fragment>
-                <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
-              </AccordionItem>
               <AccordionItem>
                 <svelte:fragment slot="lead">🐒</svelte:fragment>
                 <svelte:fragment slot="summary">Characters</svelte:fragment>
@@ -254,9 +251,18 @@
                       {/if}
                     </Carousel>
                   </div>
-
                   <!-- {/if} -->
                 </svelte:fragment>
+              </AccordionItem>
+              <AccordionItem>
+                <svelte:fragment slot="lead">🐾</svelte:fragment>
+                <svelte:fragment slot="summary">Synopsys</svelte:fragment>
+                <svelte:fragment slot="content">{anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}</svelte:fragment>
+              </AccordionItem>
+              <AccordionItem>
+                <svelte:fragment slot="lead">🎒</svelte:fragment>
+                <svelte:fragment slot="summary">Background</svelte:fragment>
+                <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
               </AccordionItem>
               <!-- ... -->
             </Accordion>
