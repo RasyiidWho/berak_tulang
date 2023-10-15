@@ -11,7 +11,7 @@ export default {
 	theme: {
 		extend: {
 			animation: {
-				'spin-slow': 'wiggle 3s linear infinite',
+				'spin-slow': 'spin 15s linear infinite',
 				'pulse-slow': 'ping 1s linear infinite',
 				'unblur-05': 'unblur 0.5s',
 			  },

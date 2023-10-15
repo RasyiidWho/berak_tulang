@@ -183,26 +183,27 @@
   ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
   -->
 
-<div class="container {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
+<div class="container lg:sticky  space-x-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl' : ''} pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
   <div class="flex flex-col lg:flex-row">
     <img bind:this={isLoadingImageHTML} class="lazyload fixed -z-10 lg:w-[1000px] opacity-10 w-[3000px] rounded-md animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} alt="logo" />
-    <div class="w-full lg:w-1/2 lg:ml-5">
-      <div class="text-center lg:fixed relative">
-        <b transition:fade class="btn !bg-transparent -z-50">
+    <div class="w-full lg:w-1/2">
+      <div class="text-center lg:sticky top-12 bottom-0 relative">
+        <b transition:fade class="btn m-0 p-0 !bg-transparent -z-50">
           <img
             bind:this={isLoadingImageHTML}
-            class="lazyload lg:w-[370px] w-[250px] rounded-md
+            class="lazyload lg:w-[360px] xl:[400px] w-[250px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
             alt="logo"
           />
         </b>
-        <div class="flex content-center justify-center w-full lg:w-[450px] -mt-2 z-50">
-          <h2 class="h2 absolute">{anime?.titles[0].title ? anime?.titles[0].title : 'Anime Not Found'}</h2>
-          <h2 class="h2 absolute opacity-20">カウボーイビバップ</h2>
-          <h2 class="h2 absolute opacity-10">カウボーイビバップ</h2>
-          <div class="absolute mt-14">
+        <div class="flex content-center justify-center w-full -mt-2 z-50">
+          <h2 class="h2 absolute mt-8">{anime?.title ? anime?.title : ''}</h2>
+          <h1 class="h1 absolute opacity-5 mt-10">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
+          <h1 class="h1 absolute opacity-5 mt-12">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
+          <h1 class="h1 absolute opacity-5 mt-14">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
+          <div class="absolute mt-1">
             {#if anime}
               <Ratings value={Math.abs(anime.score / 2)} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="30" /></svelte:fragment>
@@ -214,23 +215,18 @@
         </div>
         <!-- <h1 class="h1 lg:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1> -->
         <div class={isLoading ? 'animate-pulse blur-xl' : ''}>
-          <!-- <Ratings value={wibuRating} max={10} interactive>
-              <svelte:fragment slot="empty">🌚</svelte:fragment>
-              <svelte:fragment slot="half">🌘</svelte:fragment>
-              <svelte:fragment slot="full">🌝</svelte:fragment>
-            </Ratings> -->
         </div>
       </div>
     </div>
-    <div class="w-full lg:w-3/4 xl:w-4/5 mt-6 p-4">
-      <div class="lg:visible collapse -ml-2">
-        <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
+    <div class="w-full lg:w-11/12">
+      <div class="lg:visible collapse p-0">
+        <RadioGroup active="variant-filled-primary" spacing=0 padding="px-4 py-1" hover="hover:variant-soft-primary">
           <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Details</RadioItem>
           <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Characters</RadioItem>
           <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Episodes</RadioItem>
         </RadioGroup>
       </div>
-      <div class="pt-5 {timeHorizontal !== 1 ? 'hidden animate-none' : 'animate-unblur-05'}">
+      <div class="pt-5 xl:pl-0 xl:pt-5 pl-10 pt-20 {timeHorizontal !== 1 ? 'hidden animate-none' : 'animate-unblur-05'}">
         <div class="flex">
           <h1 class="h1">Details</h1>
           <h1 class="h1 absolute opacity-20">カウボーイビバップ</h1>
@@ -266,40 +262,28 @@
           <Accordion>
             <AccordionItem open>
               <svelte:fragment slot="lead">🐒</svelte:fragment>
-              <svelte:fragment slot="summary">Characters</svelte:fragment>
+              <svelte:fragment slot="summary"><h4 class="h4">Characters</h4></svelte:fragment>
               <svelte:fragment slot="content">
-                <!-- {#if browser} -->
-                <!-- <div class="lg:max-w-2xl max-w-lg text-center"> -->
-                <!-- <Carousel dots={false} particlesToShow={5} particlesToScroll={5} bind:this={carousel} arrows={true} autoplay={true} infinite={true} swiping={false} initialPageIndex={1}> -->
-                <!-- {#if animeChar}
-                      {#each animeChar as image}
-                        <img class=" m-1 rounded-lg h-12" src={image.character.images.webp.image_url} alt="imagex" />
-                      {/each}
-                    {/if} -->
-                <!-- </Carousel> -->
-                <!-- </div> -->
-                <!-- {/if} -->
-
-                <div class="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+                <div class="grid grid-cols-[auto_1fr_auto] items-center">
                   <!-- Button: Left -->
-                  <button type="button" class="btn-icon variant-glass-primary rounded-xl" on:click={multiColumnLeft}>
-                    <Icon icon="solar:square-alt-arrow-left-bold-duotone" width="32" />
+                  <button type="button" class=" !bg-transparent rounded-xl" on:click={multiColumnLeft}>
+                    <Icon icon="eva:arrow-left-outline" width="24" />
                   </button>
                   <!-- Carousel -->
-                  <div bind:this={elemMovies} class="snap-x snap-mandatory scroll-smooth flex gap-2 pb-2 overflow-x-hidden">
+                  <div bind:this={elemMovies} class="snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-hidden">
                     {#if animeChar}
                       {#each animeChar as image}
                         {#if !image.character.images.webp.image_url.includes('questionmark')}
-                          <a target="_blank" class="shrink-0 w-[28%] snap-start">
-                            <img class="rounded-container-token hover:brightness-125" src={image.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
+                          <a target="_blank" class="shrink-0 xl:w-[18%] w-[30%] snap-start">
+                            <img class="lazyload rounded-container-token hover:brightness-125" src={image.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
                           </a>
                         {/if}
                       {/each}
                     {/if}
                   </div>
                   <!-- Button-Right -->
-                  <button type="button" class="btn-icon variant-glass-primary rounded-xl" on:click={multiColumnRight}>
-                    <Icon icon="solar:square-alt-arrow-right-bold-duotone" width="32" />
+                  <button type="button" class="!bg-transparent rounded-xl" on:click={multiColumnRight}>
+                    <Icon icon="eva:arrow-right-outline" width="24" />
                   </button>
                 </div>
                 <!-- <section class="snap-x snap-mandatory scroll-smooth flex gap-2 pb-2 overflow-x-auto">
@@ -323,17 +307,17 @@
                 </div> -->
               </svelte:fragment>
             </AccordionItem>
-            <AccordionItem>
+            <AccordionItem open>
               <svelte:fragment slot="lead">🐾</svelte:fragment>
-              <svelte:fragment slot="summary">Synopsys</svelte:fragment>
+              <svelte:fragment slot="summary"><h4 class="h4">Synopsys</h4></svelte:fragment>
               <svelte:fragment slot="content">
                 {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
               </svelte:fragment>
             </AccordionItem>
-            <AccordionItem>
+            <AccordionItem open>
               <svelte:fragment slot="lead">🎒</svelte:fragment>
-              <svelte:fragment slot="summary">Background</svelte:fragment>
-              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
+              <svelte:fragment slot="summary"><h4 class="h4">Background</h4></svelte:fragment>
+              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></svelte:fragment>
             </AccordionItem>
             <!-- ... -->
           </Accordion>

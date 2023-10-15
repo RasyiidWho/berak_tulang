@@ -7,6 +7,7 @@
   import { get, writable } from 'svelte/store';
   import { debounce } from 'ts-debounce';
   import Icon from '@iconify/svelte';
+  import { LightSwitch } from '@skeletonlabs/skeleton';
 
   // Floating UI for Popups
   import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -26,6 +27,9 @@
   let isUpdated = false;
 
   import { animeData, animeNamex, animeID } from '$lib/stores';
+  import { onDestroy, onMount } from 'svelte';
+    import { browser } from '$app/environment';
+    import { sleep } from '$lib/sleep';
   // const preventContextMenu=(event) => {
   //   event.preventDefault();
   // };
@@ -48,6 +52,10 @@
   };
   function triggerModal() {
     modalStore.trigger(modal);
+  }
+
+  export function triggerModalPlease() {
+    triggerModal()
   }
 
   const animeDataStore = writable([]);
@@ -146,6 +154,29 @@
       console.log('data sama');
     }
   }
+  
+
+  let previousScroll = 0;
+
+  onMount(() => {
+    window.addEventListener('scroll', handleScroll);
+  });
+
+  let isScrollUp = true;
+
+  function handleScroll(event) {
+    const scroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    if (scroll > previousScroll) {
+      setTimeout(() => {
+        console.log('Upscroll');
+        isScrollUp = false
+      }, 500);
+    } else {
+      isScrollUp = true
+    }
+    previousScroll = scroll;
+  }
+
 
   // animeID.set(data.mal_id)
 
@@ -155,6 +186,7 @@
   // $:  animeNamex;
   $: console.log('isUpdated: ' + isUpdated);
   $: isUpdated;
+  $: isScrollUp
 </script>
 
 <!-- 
@@ -179,9 +211,12 @@
            -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-            <a href="/weeb/{data.mal_id}"
-              class="btn button-base-styles" 
-              on:click={() => {modalStore.close(), console.log('ngestore');}}
+            <a
+              href="/weeb/{data.mal_id}"
+              class="btn button-base-styles"
+              on:click={() => {
+                modalStore.close(), console.log('ngestore');
+              }}
             >
               <div class="w-[50px]">
                 <Avatar src={data.images.jpg.small_image_url} initials={'awwww'} width="w-[50px]" />
@@ -255,10 +290,10 @@
 
 <slot><!-- optional fallback --></slot>
 
-<div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 p-5 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
+<div class="{isScrollUp ? '' : 'translate-y-full '} transition duration-500 ease-in-out fixed bottom-0 left-1/2 transform -translate-x-1/2 p-2 m-0">
   <RadioGroup>
-    <RadioItem active="" name="justify"><Icon icon="ri:home-line" width="30" /></RadioItem>
-    <RadioItem active="" name="justify" on:click={() => triggerModal()}><Icon icon="ri:search-2-line" width="30" /></RadioItem>
-    <RadioItem active="" name="justify"><Icon icon="ri:menu-4-fill" width="30" /></RadioItem>
+    <RadioItem active="" name="justify"><button class="btn m-0 p-0 pt-1"><Icon icon="ri:home-line" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify" on:click={() => triggerModal()}><button on:click={() => triggerModal()} class="btn m-0 p-0 pt-1"><Icon icon="ri:search-2-line" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="ri:menu-4-fill" width="30" /></button></RadioItem>
   </RadioGroup>
 </div>

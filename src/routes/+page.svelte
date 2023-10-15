@@ -3,12 +3,11 @@
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
   import { fade } from 'svelte/transition';
-  import { Ratings, getModalStore } from '@skeletonlabs/skeleton';
+  import { Ratings, focusTrap, getModalStore } from '@skeletonlabs/skeleton';
   import { animeData, animeNamex, animeID } from '$lib/stores';
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
-
   let wibuAnime = 'Tell your friend your list!';
   let wibuGambar;
   let wibuRating = 10;
@@ -38,6 +37,11 @@
       console.log("v: " + v)
     }
   });
+
+  const modal: ModalSettings = {
+    type: 'component',
+    component: 'exampleImage'
+  };
 
   // Fungsi nggo ngupdate, sangkutke neng button nggo update value'ne
   // Templekke neng on:, contoh: on:click={() => updateAlasanBerak(AlasanBerak)}
@@ -112,6 +116,7 @@ animeID.subscribe((v) => {
   $: isLoading;
   $: isLoadingImage;
   // $: printAnime(wibuID);
+  let isFocused: boolean = true;
 
 </script>
 
@@ -128,19 +133,15 @@ animeID.subscribe((v) => {
 
 <div class="container {$modalStore[0] ? 'blur-3xl' : ''} pt-5">
   <div class="flex w-screen">
-    <div class="m-auto grid grid-cols-1 gap-10 text-center pt-32">
+    <div class="m-auto grid grid-cols-1 gap-2 text-center pt-20">
       <b transition:fade class="btn !bg-transparent h-96 -z-50">
-        <img bind:this={isLoadingImageHTML} class="md:w-[400px] w-[2000px] rounded-md {isLoadingImage ? 'animate-pulse blur-xl' : ''} {wibuGambar ? wibuGambar : berak}" src={wibuGambar} alt="logo" />
+        <img class="md:w-[400px] w-[2000px] rounded-md" src="{berak}" alt="logo" />
       </b>
-      <h1 class="h1 md:pt-6 pt-5 {isLoading ? 'animate-pulse blur-xl' : ''}">{wibuAnime}</h1>
-      <div class={isLoading ? 'animate-pulse blur-xl' : ''}>
-        <!-- <Ratings value={wibuRating} max={10} interactive>
-          <svelte:fragment slot="empty">🌚</svelte:fragment>
-          <svelte:fragment slot="half">🌘</svelte:fragment>
-          <svelte:fragment slot="full">🌝</svelte:fragment>
-        </Ratings> -->
-      </div>
-
+      <h1 class="h1" on:click={() => modalStore.trigger(modal)}>{wibuAnime}</h1>
+      <form action="" use:focusTrap={isFocused}>
+        <input on:click={() => modalStore.trigger(modal)} class="input rounded-lg md:w-full w-[400px] variant-form-material" style="text-decoration: none !important;" spellcheck="false" placeholder="Pssst... Click me!" />
+      </form>
+      
       <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
       <div class="m-5">
         <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
