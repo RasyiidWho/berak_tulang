@@ -12,7 +12,7 @@ export default {
 		extend: {
 			animation: {
 				'spin-slow': 'spin 12s linear infinite',
-				'deblur-05': 'deblur 0.5s',
+				'unblur-05': 'unblur 0.5s',
 			  },
 			  keyframes: {
 				wiggle: {
@@ -30,7 +30,7 @@ export default {
 					  transform: 'translateY(0)',
 					},
 				},
-				'deblur': {
+				'unblur': {
 					'0%': {
 					  filter: 'blur(60px)',
 					},
