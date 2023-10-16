@@ -374,14 +374,14 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                   </div> -->
 
                   <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit="{onInit}">
-                    <div class="embla__container flex -z-[400] lg:z-0">
+                    <div class="embla__container flex -z-[400] lg:z-0 items-center">
                     {#if animeChar}
                       {#each animeChar as char}
                         {#if !char.character.images.webp.image_url.includes('questionmark')}
                           <a target="_blank" class="w-auto embla__container opacity-100 shrink-0">
                             <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
                               <div class="text-center">
-                                <h1 class="w-min h4">{char.character.name}</h1>
+                                <h1 class=" h4">{char.character.name}</h1>
                                 <!-- {#if char.voice_actors[0]}
                                 <h1 class="h4 -mt-5 ml-10 w-28 truncate opacity-40">{char.voice_actors[0].person.name}</h1>
                                 {/if} -->
