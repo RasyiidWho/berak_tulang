@@ -118,6 +118,7 @@ animeID.subscribe((v) => {
   // $: printAnime(wibuID);
   let isFocused: boolean = true;
 
+
 </script>
 
 
@@ -143,12 +144,13 @@ animeID.subscribe((v) => {
       </form>
       
       <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
-      <div class="m-5">
-        <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
-        <!-- <h1 class="h1">Isine: {newValue}</h1> -->
-        <!-- <input class="input" type="text" on:change="{() => updateString(newValue)}" bind:value="{newValue}"> -->
-        <!-- <InputChip bind:value={arrayAlasanBerak} on:keydown={() =>animeNamex.set(animeName)} name="chips" on:add={() => updateAlasanBerak(arrayAlasanBerak)} placeholder="Type here_" /> -->
-      </div>
+        <div class="m-5">
+          <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
+          <!-- <h1 class="h1">Isine: {newValue}</h1> -->
+          <!-- <input class="input" type="text" on:change="{() => updateString(newValue)}" bind:value="{newValue}"> -->
+          <!-- <InputChip bind:value={arrayAlasanBerak} on:keydown={() =>animeNamex.set(animeName)} name="chips" on:add={() => updateAlasanBerak(arrayAlasanBerak)} placeholder="Type here_" /> -->
+        </div>
+
     </div>
   </div>
 </div>

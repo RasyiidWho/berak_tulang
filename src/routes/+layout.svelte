@@ -8,6 +8,7 @@
   import { debounce } from 'ts-debounce';
   import Icon from '@iconify/svelte';
   import { LightSwitch } from '@skeletonlabs/skeleton';
+  import { trimText } from '$lib/trim';
 
   // Floating UI for Popups
   import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
@@ -163,16 +164,22 @@
   });
 
   let isScrollUp = true;
+  let isScrollTotal = 0;
 
   function handleScroll(event) {
     const scroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-    if (scroll > previousScroll) {
-      setTimeout(() => {
-        console.log('Upscroll');
+    if (scroll > previousScroll ) {
+      isScrollTotal++;
+      if (isScrollTotal > 40) {
+        console.log("isScrollTotal: " + isScrollTotal)
+      // setTimeout(() => {
+        // console.log('Upscroll');
         isScrollUp = false
-      }, 500);
+      // }, 500);
+      }
     } else {
       isScrollUp = true
+      isScrollTotal = 0;
     }
     previousScroll = scroll;
   }
@@ -200,9 +207,9 @@
 
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
-    <section class="md:w-[500px] w-full text-token md:mt-40 mt-20 card">
+    <section class="md:w-[500px] w-full text-token md:mt-40 mt-20 card border-none border-0 ">
       <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:keydown={handleKeyDown} />
-      <ul class="list">
+      <ul class="list border-none">
         <!-- {JSON.stringify($animeData)} -->
         {#if isUpdated}
           <!-- <div>The writable store has a value: {JSON.stringify($animeData)}</div> -->
@@ -213,7 +220,7 @@
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
             <a
               href="/weeb/{data.mal_id}"
-              class="btn button-base-styles"
+              class="btn button-base-styles w-full"
               on:click={() => {
                 modalStore.close(), console.log('ngestore');
               }}
@@ -221,11 +228,11 @@
               <div class="w-[50px]">
                 <Avatar src={data.images.jpg.small_image_url} initials={'awwww'} width="w-[50px]" />
               </div>
-              <div class=" text-left left-0 w-full">
-                <h6 class="h6 flex-auto text-left"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px]">Anime</span> {data.titles[0].title}</h6>
-                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">⭐ {data.score ? data.score : '...'} </span>
-                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🗓️ {data.year ? data.year : '...'} </span>
-                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🧬 {data.genres[0]?.name ? data.genres[0].name : '...'}</span>
+              <div class="text-left left-0 w-full border-none">
+                <h6 class="h6 flex-auto text-left md:w-96 w-72 truncate"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px] ">Anime</span> {data.genres.find((genre) => genre.name === 'Award Winning') ? '🏆 ' : ''}{data.titles[0].title}</h6>
+                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">⭐ {data.score ? data.score : '....'} </span>
+                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🗓️ {data.aired.prop.from.year ? data.aired.prop.from.year : '....'} </span>
+                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🧬 {data.genres[0]?.name ? data.genres[0].name : '....'}</span>
                 <!-- <span class="chip variant-filled-secondary">Anime</span>
                 <span class="chip variant-filled-secondary">Anime</span> -->
               </div>
@@ -292,8 +299,9 @@
 
 <div class="{isScrollUp ? '' : 'translate-y-full '} transition duration-500 ease-in-out fixed bottom-0 left-1/2 transform -translate-x-1/2 p-2 m-0">
   <RadioGroup>
-    <RadioItem active="" name="justify"><button class="btn m-0 p-0 pt-1"><Icon icon="ri:home-line" width="30" /></button></RadioItem>
-    <RadioItem active="" name="justify" on:click={() => triggerModal()}><button on:click={() => triggerModal()} class="btn m-0 p-0 pt-1"><Icon icon="ri:search-2-line" width="30" /></button></RadioItem>
-    <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="ri:menu-4-fill" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify"><button class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:house" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify" on:click={() => triggerModal()}><button on:click={() => triggerModal()} class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:magnifying-glass-tilted-left" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="fluent-emoji:page-with-curl" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="fluent-emoji:heart-on-fire" width="30" /></button></RadioItem>
   </RadioGroup>
 </div>
