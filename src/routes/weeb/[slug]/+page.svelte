@@ -67,8 +67,8 @@
 
   async function printAnimePromise(id) {
     debouncedFunction.cancel();
-    // isLoading = true;
-    // isLoadingImage = true;
+    isLoading = true;
+    isLoadingImage = true;
     console.log('printAnimePromise');
     // console.log('animeData: ' + JSON.stringify(animeData));
     // console.log('tulung executed');
@@ -195,7 +195,7 @@ let items = [1,2,3,4,5,6,7,8,9,10]
   -->
 
 <img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 lg:w-[800px] rounded-full opacity-30 lg:opacity-20 w-[400px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
-<div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl hidden' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
+<div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl disabled' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
   <div class="flex flex-col lg:flex-row">
     <!-- 
 ███╗   ███╗ ██████╗ ██████╗ ██╗██╗     ███████╗
@@ -381,9 +381,9 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                           <a target="_blank" class="w-auto embla__container opacity-100 shrink-0">
                             <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
                               <div class="text-center">
-                                <h1 class=" h4">{char.character.name}</h1>
+                                <h5 class="h5">{char.character.name}</h5>
                                 <!-- {#if char.voice_actors[0]}
-                                <h1 class="h4 -mt-5 ml-10 w-28 truncate opacity-40">{char.voice_actors[0].person.name}</h1>
+                                <h1 class="h4 -mt-2 ml-10  opacity-40">{char.voice_actors[0].person.name}</h1>
                                 {/if} -->
                               </div>
                           </a>
