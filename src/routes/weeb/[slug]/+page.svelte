@@ -374,7 +374,7 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                   </div> -->
 
                   <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit="{onInit}">
-                    <div class="embla__container flex -z-[400] lg:z-0 items-center">
+                    <div class="embla__container flex -z-[400] lg:z-0 items-end">
                     {#if animeChar}
                       {#each animeChar as char}
                         {#if !char.character.images.webp.image_url.includes('questionmark')}
