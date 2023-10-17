@@ -226,7 +226,7 @@
               }}
             >
               <div class="w-[50px]">
-                <Avatar src={data.images.jpg.small_image_url} initials={'awwww'} width="w-[50px]" />
+                <Avatar src={data.images.jpg.small_image_url} width="w-[50px]" />
               </div>
               <div class="text-left left-0 w-full border-none">
                 <h6 class="h6 flex-auto text-left md:w-96 w-72 truncate"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px] ">Anime</span> {data.genres.find((genre) => genre.name === 'Award Winning') ? '🏆 ' : ''}{data.titles[0].title}</h6>

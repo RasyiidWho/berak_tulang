@@ -12,7 +12,7 @@
   import Icon from '@iconify/svelte';
   import 'lazysizes';
   export let data;
-  import emblaCarouselSvelte from 'embla-carousel-svelte'
+  import emblaCarouselSvelte from 'embla-carousel-svelte';
   // import a plugin
   import 'lazysizes/plugins/parent-fit/ls.parent-fit';
   import { onMount } from 'svelte';
@@ -155,14 +155,13 @@
   // $: printAnimePromise(wibuID);
   // $: printAnimePromise(animeIDx);
 
-
-  let emblaApi
-  let options = { loop: true }
+  let emblaApi;
+  let options = { loop: true };
 
   const onInit = (event) => {
-    emblaApi = event.detail
-    console.log(emblaApi.slideNodes()) // Access API
-  }
+    emblaApi = event.detail;
+    console.log(emblaApi.slideNodes()); // Access API
+  };
 
   $: isLoading;
   $: isLoadingImage;
@@ -172,7 +171,7 @@
   }
   $: console.log('slug: ' + data.slug);
 
-let items = [1,2,3,4,5,6,7,8,9,10]
+  let items = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
   onMount(() => {
     // isLoading = true;
@@ -373,37 +372,35 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                     {/if}
                   </div> -->
 
-                  <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit="{onInit}">
-                    <div class="embla__container flex -z-[400] lg:z-0 items-end">
-                    {#if animeChar}
-                      {#each animeChar as char}
-                        {#if !char.character.images.webp.image_url.includes('questionmark')}
-                          <a target="_blank" class="w-auto embla__container opacity-100 shrink-0">
-                            <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
-                              <div class="text-center">
-                                <h5 class="h5 w-48">{char.character.name}</h5>
-                                <!-- {#if char.voice_actors[0]}
-                                <h1 class="h4 -mt-2 ml-10  opacity-40">{char.voice_actors[0].person.name}</h1>
-                                {/if} -->
+                  <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit={onInit}>
+                    <div class="auto embla__container flex">
+                      {#if animeChar}
+                        {#each animeChar as char}
+                          {#if !char.character.images.webp.image_url.includes('questionmark')}
+                            <a href="_blank" class="w-auto embla__container opacity-100 shrink-0">
+                              <div class="text-center line-clamp-2">
+                                <h5 class="h5">Jeneng Dowo Banget, TOk</h5>
                               </div>
-                          </a>
-                        {/if}
-                      {/each}
-                    {/if}
+                              <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
+                            </a>
+                          {/if}
+                        {/each}
+                      {/if}
 
-                    <!-- {#each items as item}
-                    <a target="_blank" class="embla__slide overflow-hidden shrink-0 xl:w-[18%] w-[30%] snap-start">
-                      <img class="lazyload rounded-container-token p-0.5 hover:brightness-125 overflow-hidden" src="https://picsum.photos/200/300?v={item}" alt="no" title="rrt" loading="lazy" />
-                      <div class="absolute bottom-0 -ml-6 text-center w-max bg-opacity-50 overflow-hidden">
-                        <h1 class="h4">{Aoba, Kozue}</h1>
-                        <h1 class="h4 -mt-5 ml-10 opacity-40">Arai, Satomi</h1>
+                      <!-- {#each items as item}
+                    <a href="_blank" class="w-[170px] opacity-100 shrink-0">
+                      <div class="text-center line-clamp-2">
+                        <h5 class="h5">Jeneng Dowo Banget, TOk</h5>
                       </div>
-                    </a> -->
-                    
-                  <!-- {/each} -->
+                      <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125n" src="https://picsum.photos/200/{item}?v={item}" alt="no" title="rrt" loading="lazy" />
+                    </a>
+                    {/each} -->
+                    </div>
+
+                    <!-- {/each} -->
                     <!-- </div>
                   </div> -->
-                  <!-- <div bind:this={elemMovies} use:emblaCarouselSvelte class="embla pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar">
+                    <!-- <div bind:this={elemMovies} use:emblaCarouselSvelte class="embla pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar">
                     <div class="embla__container">
                         {#each items as item}
                           <a target="_blank" class="embla__slide shrink-0 xl:w-[18%] w-[30%] snap-start">
@@ -411,14 +408,15 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                           </a>
                         {/each}
                     </div> -->
-                  <!-- </div> -->
+                    <!-- </div> -->
 
-                  <!-- <div class="pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar"> -->
+                    <!-- <div class="pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar"> -->
                     <!-- Button-Right -->
                     <!-- <button type="button" class="!bg-transparent rounded-xl" on:click={multiColumnRight}>
                     <Icon icon="eva:arrow-right-outline" width="24" />
                   </button> -->
-                  <!-- </div> -->
+                    <!-- </div> -->
+                  </div>
                 </div>
               </article>
             </div>
