@@ -210,7 +210,7 @@
         <b transition:fade class="btn m-0 p-0 left-0 w-1/3 !bg-transparent -z-50">
           <img alt="banner"
             bind:this={isLoadingImageHTML}
-            class="w-[250px] rounded-md
+            class="min-w-[170px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
@@ -393,7 +393,7 @@
                       {#if animeChar}
                         {#each animeChar as char}
                           {#if !char.character.images.webp.image_url.includes('questionmark')}
-                            <a href="#" class="w-[170px] embla__container opacity-100 shrink-0">
+                            <a href="#" class="w-[170px] opacity-100 shrink-0">
                               <div class="text-center line-clamp-2">
                                 <h5 class="h5">{char.character.name}</h5>
                               </div>
