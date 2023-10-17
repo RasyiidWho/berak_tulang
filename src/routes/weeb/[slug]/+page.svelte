@@ -207,10 +207,10 @@
                                                 -->
     <div class="w-full lg:hidden block">
       <div class="px-5 py-5 bottom-0 flex justify-start align-top">
-        <b transition:fade class="btn m-0 p-0 left-0 w-1/3 min-w-[150px] !bg-transparent -z-50">
-          <img
+        <b transition:fade class="btn m-0 p-0 left-0 w-1/3 !bg-transparent -z-50">
+          <img alt="banner"
             bind:this={isLoadingImageHTML}
-            class="w-[150px] rounded-md
+            class="w-[250px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
