@@ -381,7 +381,7 @@ let items = [1,2,3,4,5,6,7,8,9,10]
                           <a target="_blank" class="w-auto embla__container opacity-100 shrink-0">
                             <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
                               <div class="text-center">
-                                <h5 class="h5">{char.character.name}</h5>
+                                <h5 class="h5 w-48">{char.character.name}</h5>
                                 <!-- {#if char.voice_actors[0]}
                                 <h1 class="h4 -mt-2 ml-10  opacity-40">{char.voice_actors[0].person.name}</h1>
                                 {/if} -->
