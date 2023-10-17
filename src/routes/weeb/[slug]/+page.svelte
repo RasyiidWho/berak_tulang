@@ -8,7 +8,6 @@
   import { animeData, animeNamex, animeID } from '$lib/stores';
   import { browser } from '$app/environment';
   import { writable } from 'svelte/store';
-  import { debounce } from 'ts-debounce';
   import Icon from '@iconify/svelte';
   import 'lazysizes';
   export let data;
@@ -37,6 +36,7 @@
   AlasanBerak.subscribe((v) => {
     arrayAlasanBerak = v;
   });
+  
 
   // let animeName;
 
@@ -66,7 +66,6 @@
   let animeChar;
 
   async function printAnimePromise(id) {
-    debouncedFunction.cancel();
     isLoading = true;
     isLoadingImage = true;
     console.log('printAnimePromise');
@@ -86,7 +85,7 @@
         // response ? (wibuRating = datos.score) : (wibuRating = 10);
         // console.log("data.images.webp.image_url: " + JSON.stringify(datos.mal_id))
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
-        await sleep(2000);
+        // await sleep(2000);
         isLoading = false;
         // await sleep(3000);
         isLoadingImage = false;
@@ -107,16 +106,16 @@
     carousel.goToNext();
   };
 
-  const debouncedFunction = debounce(printAnimePromise, 3000, { isImmediate: false, maxWait: 5000 });
+  // const throttledFunction = throttle(printAnimePromise, 3000, { isImmediate: false, maxWait: 5000 });
 
-  animeID.subscribe((v) => {
-    if (v == true) {
-      console.log('isine true, apaan coba?');
-    } else {
-      console.log('v: ' + v);
-      debouncedFunction(v);
-    }
-  });
+  // animeID.subscribe((v) => {
+  //   if (v == true) {
+  //     console.log('isine true, apaan coba?');
+  //   } else {
+  //     console.log('v: ' + v);
+  //     throttle(v, 500);
+  //   }
+  // });
 
   let elemMovies: HTMLDivElement;
 
@@ -132,6 +131,7 @@
     if (elemMovies.scrollLeft < elemMovies.scrollWidth - elemMovies.clientWidth - 1) x = elemMovies.scrollLeft + elemMovies.clientWidth;
     elemMovies.scroll(x, 0);
   }
+
 
   // $ / bind:value={} Gunane nganggo eksekusi secara langsung nek ono perubahan.
   // secara realtime & reaktif
@@ -173,6 +173,7 @@
 
   let items = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
+
   onMount(() => {
     // isLoading = true;
     // isLoadingImage = true;
@@ -193,7 +194,7 @@
   ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
   -->
 
-<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 lg:w-[800px] rounded-full opacity-30 lg:opacity-20 w-[400px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
+<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 lg:w-[800px] rounded-full opacity-30 lg:opacity-40 w-[400px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
 <div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl disabled' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
   <div class="flex flex-col lg:flex-row">
     <!-- 
@@ -251,7 +252,7 @@
     <div class="w-full lg:w-1/2 lg:block hidden">
       <div class="text-center sticky top-12 bottom-0">
         <b transition:fade class="btn m-0 p-0 !bg-transparent -z-50">
-          <img
+          <img alt="cover"
             bind:this={isLoadingImageHTML}
             class="lazyload lg:w-[360px] xl:[400px] w-[250px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
@@ -298,18 +299,18 @@
 ╚██████╗╚██████╔╝██║ ╚████║   ██║   ███████╗██║ ╚████║   ██║   
  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝   ╚═╝   
                                                                 -->
-    <div class="w-full lg:w-11/12">
+    <div class="w-full lg:w-11/12 mb-100 pb-100">
       <div class="lg:block hidden p-0">
         <RadioGroup active="variant-filled-primary" spacing="0" padding="px-4 py-1" hover="hover:variant-soft-primary">
-          <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Details</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Characters</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Episodes</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Overview</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Review</RadioItem>
+          <!-- <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Overview</RadioItem> -->
         </RadioGroup>
       </div>
       <div class="pt-15 xl:pl-0 xl:pt-5 overflow-hidden pt-20 {timeHorizontal !== 1 ? 'hidden animate-none' : 'animate-unblur-05'}">
         <div class="flex pl-5 overflow-hidden">
           <Icon icon="fluent-emoji:bookmark-tabs" height="32px" />
-          <h1 class="h1 flex ml-2">Details</h1>
+          <h1 class="h1 flex ml-2">Overview</h1>
           <h1 class="h1 absolute opacity-10 pl-5 lg:-mt-3 overflow-hidden">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
         </div>
         <div style="font-size: 0;" class="pt-2 pl-5 pr-5 block flex-wrap overflow-x-hidden box-content">
@@ -321,7 +322,8 @@
             {:else}
               <!-- <span class="chip variant-soft-primary mr-1 my-0">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span> -->
             {/if}
-            <span class="chip variant-soft-primary mr-1 my-0 text-sm">
+            <span class="chip variant-soft-primary mr-1 my-0 text-sm animate-pulse text-yellow-100 mb-1">📀 Airing in 3 hour, 26 mins!</span>
+            <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">
               {#if anime}
                 {#if anime.season == 'fall'}
                   🍂 Fall
@@ -337,9 +339,23 @@
               {/if}
             </span>
             {#each anime.genres as genre}
-              <span class="chip variant-soft-primary mr-1 my-0 text-sm"> {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}</span>
+              <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1"> {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}</span>
             {/each}
           {/if}
+          {#if anime}
+            {#if anime.demographics === 'object' || anime.demographics[0]}
+              {#each anime.demographics as demographic}
+                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{demographic.name}</span>
+              {/each}
+            {/if}
+          {/if}
+          {#if anime}
+          {#if anime.themes === 'object' || anime.themes[0]}
+            {#each anime.themes as theme}
+              <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{theme.name}</span>
+            {/each}
+          {/if}
+        {/if}
         </div>
         <div class="block opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
           {#if anime}
@@ -353,7 +369,7 @@
             <div class="p-4">
               <h2 class="h2">Characters</h2>
               <article>
-                <div>List of characters that played</div>
+                <div>List of characters that played <span class="chip variant-soft animate-pulse"><Icon icon="fluent-emoji:yellow-heart" />Chars & Seyuus are Here!</span></div>
                 <div class="opacity-100 grid grid-cols-[auto_1fr_auto] items-center">
                   <!-- Button: Left -->
                   <!-- <button type="button" class=" !bg-transparent rounded-xl" on:click={multiColumnLeft}>
@@ -373,13 +389,13 @@
                   </div> -->
 
                   <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit={onInit}>
-                    <div class="auto embla__container flex">
+                    <div class="w-auto embla__container flex">
                       {#if animeChar}
                         {#each animeChar as char}
                           {#if !char.character.images.webp.image_url.includes('questionmark')}
-                            <a href="_blank" class="w-auto embla__container opacity-100 shrink-0">
+                            <a href="#" class="w-[170px] embla__container opacity-100 shrink-0">
                               <div class="text-center line-clamp-2">
-                                <h5 class="h5">Jeneng Dowo Banget, TOk</h5>
+                                <h5 class="h5">{char.character.name}</h5>
                               </div>
                               <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
                             </a>
@@ -431,7 +447,7 @@
               <div class="p-4">
                 <h2 class="h2">Studios</h2>
                 <article class="opacity-50">
-                  <p>#300 by ranking</p>
+                  <p>Wit Studio, CloverWorks</p>
                 </article>
               </div>
             </a>
@@ -444,9 +460,10 @@
               {/if}
             </header> -->
               <div class="p-4">
-                <h2 class="h2">Ranking</h2>
+                <h2 class="h2">Status</h2>
                 <article class="opacity-50">
-                  <p>#300 by rankin</p>
+                  <p>Currently Airing...</p>
+                  <p>Broadcast at Saturdays at 23:00 (JST)</p>
                 </article>
               </div>
             </a>
@@ -459,9 +476,9 @@
               {/if}
             </header> -->
               <div class="p-4">
-                <h2 class="h2">Ranking</h2>
+                <h2 class="h2">Trailer</h2>
                 <article class="opacity-50">
-                  <p>#300 by ranking, #300 by popoularity, with 300 member</p>
+                  <p>IKI NKO PLACEHOLDER TRAILER</p>
                 </article>
               </div>
             </a>
@@ -480,8 +497,8 @@
         <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
           <Accordion>
             <AccordionItem open>
-              <svelte:fragment slot="lead">🐒</svelte:fragment>
-              <svelte:fragment slot="summary"><h4 class="h4">Characters</h4></svelte:fragment>
+              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:banana" width="32px"/></svelte:fragment>
+              <svelte:fragment slot="summary"><h2 class="h2">Episodes & Relation</h2></svelte:fragment>
               <svelte:fragment slot="content">
                 <!-- <section class="snap-x snap-mandatory scroll-smooth flex gap-2 pb-2 overflow-x-auto">
                   
@@ -505,22 +522,25 @@
               </svelte:fragment>
             </AccordionItem>
             <AccordionItem open>
-              <svelte:fragment slot="lead">🐾</svelte:fragment>
-              <svelte:fragment slot="summary"><h4 class="h4">Synopsys</h4></svelte:fragment>
+              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px"/></svelte:fragment>
+              <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
               <svelte:fragment slot="content">
                 {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
               </svelte:fragment>
             </AccordionItem>
             <AccordionItem open>
-              <svelte:fragment slot="lead">🎒</svelte:fragment>
-              <svelte:fragment slot="summary"><h4 class="h4">Background</h4></svelte:fragment>
-              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></svelte:fragment>
+              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beach-with-umbrella" width="32px"/></svelte:fragment>
+              <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
+              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
             </AccordionItem>
             <!-- ... -->
           </Accordion>
+          
         </div>
       </div>
+      <div class="spacer h-[100px]"></div>
     </div>
+    
   </div>
   <!-- <div class="flex w-screen">
       

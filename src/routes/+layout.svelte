@@ -5,7 +5,7 @@
   import { initializeStores } from '@skeletonlabs/skeleton';
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { get, writable } from 'svelte/store';
-  import { debounce } from 'ts-debounce';
+  import { throttle, debounce } from 'lodash-es';
   import Icon from '@iconify/svelte';
   import { LightSwitch } from '@skeletonlabs/skeleton';
   import { trimText } from '$lib/trim';
@@ -86,31 +86,29 @@
   //   return true;
   // }
 
-  const searchAnimePromise = async (name) => {
-    console.log('debounce terpanggil: ');
-    animeData.set(0);
-    try {
-      const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=5');
-      if (response.ok && name) {
-        const animeDatas = await response.json();
-        const datos = animeDatas.data;
-        animeDataStore.set(datos);
-        animeData.set(datos);
-        // await sleep(5000);
-        // console.log(JSON.stringify($animeDataStore));
-        // await sleep(2000);
-      } else {
-        console.log('animeData: ' + animeData);
-        console.error('Failed to fetch data from the API');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const searchAnimePromise = async (name) => {
+  //   console.log('throttle terpanggil: ');
+  //   animeData.set(0);
+  //   try {
+  //     const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=5');
+  //     if (response.ok && name) {
+  //       const animeDatas = await response.json();
+  //       const datos = animeDatas.data;
+  //       animeDataStore.set(datos);
+  //       animeData.set(datos);
+  //       // await sleep(5000);
+  //       // console.log(JSON.stringify($animeDataStore));
+  //       // await sleep(2000);
+  //     } else {
+  //       console.log('animeData: ' + animeData);
+  //       console.error('Failed to fetch data from the API');
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   async function searchAnimePromiseNoArrow(name) {
-    debouncedFunction.cancel();
-    console.log('debounce terpanggil no arrow: ');
     isUpdated = false;
     try {
       const response = await fetch('https://api.jikan.moe/v4/anime?q=' + name + '&limit=7');
@@ -133,20 +131,10 @@
       console.log(error);
     }
   }
+  
 
-  const debouncedFunction = debounce(searchAnimePromiseNoArrow, 2000, { isImmediate: false });
 
-  function handleKeyDown(event) {
-    if (event.keyCode !== 8 || animeNameSedurunge.endsWith(' ')) {
-      debouncedFunction(animeName);
-    }
-    animeNameSedurunge = animeName;
-    if (event.key === 'F1') {
-      // Execute your command here
-      triggerModal();
-    }
-  }
-
+  
   function animeIDSet(data) {
     if (data !== $animeData) {
       animeID.set(data.mal_id);
@@ -158,38 +146,62 @@
   
 
   let previousScroll = 0;
-
+  
   onMount(() => {
     window.addEventListener('scroll', handleScroll);
   });
-
+  
   let isScrollUp = true;
   let isScrollTotal = 0;
-
+  
   function handleScroll(event) {
     const scroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
     if (scroll > previousScroll ) {
       isScrollTotal++;
-      if (isScrollTotal > 40) {
+      if (isScrollTotal > 20) {
         console.log("isScrollTotal: " + isScrollTotal)
-      // setTimeout(() => {
+        // setTimeout(() => {
         // console.log('Upscroll');
         isScrollUp = false
       // }, 500);
-      }
-    } else {
-      isScrollUp = true
-      isScrollTotal = 0;
     }
-    previousScroll = scroll;
+  } else {
+    isScrollUp = true
+    isScrollTotal = 0;
   }
+  previousScroll = scroll;
+}
+
+// function handleKeyDown(event) {
+//   if (event.keyCode !== 8 || animeNameSedurunge.endsWith(' ')) {
+//     console.log("throttle triggered")
+//     searchAnimePromiseNoArrow(animeName)
+//   }
+//   animeNameSedurunge = animeName;
+//   if (event.key === 'F2') {
+//     // Execute your command here
+//     triggerModal();
+//   }
+// }
+
+const handleKeyDown = debounce(event => {
+  if (event.keyCode !== 8 || animeNameSedurunge.endsWith(' ')) {
+    console.log("debounce triggered")
+    searchAnimePromiseNoArrow(animeName)
+  }
+  animeNameSedurunge = animeName;
+  if (event.key === 'F2') {
+    // Execute your command here
+    triggerModal();
+  }
+}, 500)
 
 
-  // animeID.set(data.mal_id)
+// animeID.set(data.mal_id)
 
-  // $: debouncedFunction
-  // $: animeData
-  // $: animeName
+// $: throttledFunction
+// $: animeData
+// $: animeName
   // $:  animeNamex;
   $: console.log('isUpdated: ' + isUpdated);
   $: isUpdated;

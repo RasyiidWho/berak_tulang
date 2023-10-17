@@ -3,7 +3,7 @@
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
   import { fade } from 'svelte/transition';
-  import { Ratings, focusTrap, getModalStore } from '@skeletonlabs/skeleton';
+  import { Ratings, focusTrap, getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
   import { animeData, animeNamex, animeID } from '$lib/stores';
 
   const modalStore = getModalStore();
@@ -111,8 +111,7 @@ animeID.subscribe((v) => {
   
 
   // $: wibuID = arrayAlasanBerak.slice(-1).pop();
-  // $: printAnimePromise(wibuID);
-  // $: printAnimePromise(animeIDx);
+  $: printAnimePromise(wibuID);
   $: isLoading;
   $: isLoadingImage;
   // $: printAnime(wibuID);

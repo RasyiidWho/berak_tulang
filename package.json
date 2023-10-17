@@ -47,8 +47,10 @@
 		"eslint-plugin-svelte": "^2.34.0",
 		"just-debounce-it": "^3.2.0",
 		"lazysizes": "^5.3.2",
+		"lodash-es": "^4.17.21",
 		"prettier": "^3.0.3",
 		"prettier-plugin-svelte": "^3.0.3",
+		"swiper": "^10.3.1",
 		"ts-debounce": "^4.0.0",
 		"vite-plugin-svelte-console-remover": "^1.0.10"
 	}

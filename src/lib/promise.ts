@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 
+
 export function fetchData() {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
