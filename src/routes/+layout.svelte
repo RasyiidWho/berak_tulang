@@ -220,7 +220,7 @@ const handleKeyDown = debounce(event => {
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
     <section class="md:w-[500px] w-full text-token md:mt-40 mt-20 card border-none border-0 ">
-      <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:keydown={handleKeyDown} />
+      <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
       <ul class="list border-none">
         <!-- {JSON.stringify($animeData)} -->
         {#if isUpdated}
