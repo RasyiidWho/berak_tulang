@@ -287,7 +287,7 @@ const handleKeyDown = debounce(event => {
   </div>
 {/if}
 <Modal />
-<svelte:window on:keydown={handleKeyDown} />
+<!-- <svelte:window on:keydown={handleKeyDown} /> -->
 <!-- <AppShell>
   <svelte:fragment slot="header">
     <AppBar background="bg-transparent {$modalStore[0] ? 'blur-md' : ''}">
