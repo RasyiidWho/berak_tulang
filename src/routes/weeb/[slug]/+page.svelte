@@ -194,7 +194,7 @@
   ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
   -->
 
-<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 lg:w-[800px] rounded-full opacity-30 lg:opacity-40 w-[400px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
+<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 rounded-full opacity-40 lg:opacity-40 w-[800px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
 <div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl disabled' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
   <div class="flex flex-col lg:flex-row">
     <!-- 
@@ -210,13 +210,13 @@
         <b transition:fade class="btn m-0 p-0 left-0 w-1/3 !bg-transparent -z-50">
           <img alt="banner"
             bind:this={isLoadingImageHTML}
-            class="min-w-[170px] rounded-md
+            class="min-w-[150px] sm:min-w-[220px] ml-4 sm:ml-1 rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
           />
         </b>
-        <div class="pl-5 overflow-hidden">
+        <div class="ml-9 sm:ml-6 overflow-hidden">
           <div>
             {#if anime}
               <Ratings justify="start" value={Math.abs(anime.score / 2) + 1} max={5}>
@@ -224,7 +224,7 @@
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="20" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="20" /></svelte:fragment>
               </Ratings>
-              <div class="pt-2">
+              <div class="pt-0 sm:pt-2">
                 <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:star" class="mr-1" /> {anime.score}</span>
                 <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:spiral-calendar" class="mr-1" /> {anime.aired.prop.from.year}</span>
                 <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:admission-tickets" class="mr-1" /> {trimTextAfterWord(anime.duration, 'min')} + {anime.episodes} eps</span>
@@ -232,7 +232,7 @@
               </div>
             {/if}
           </div>
-          <h3 class="h3">{anime?.title ? anime?.title : ''}</h3>
+          <h3 class="h4 sm:h3">{anime?.title ? anime?.title : ''}</h3>
           <h1 class="h1 grid opacity-5 w-48 absolute -m-24 -z-[51] overflow-hidden">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
           <!-- <h1 class="h1 opacity-5 absolute m-0">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
           <h1 class="h1 opacity-5 absolute m-5">{anime?.title ? anime.title_japanese : 'タイトル'}</h1> -->
@@ -254,7 +254,7 @@
         <b transition:fade class="btn m-0 p-0 !bg-transparent -z-50">
           <img alt="cover"
             bind:this={isLoadingImageHTML}
-            class="lazyload lg:w-[360px] xl:[400px] w-[250px] rounded-md
+            class="lazyload md:w-[360px] xl:min-w-[400px] 2xl:min-w-[600px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}

@@ -194,7 +194,7 @@ const handleKeyDown = debounce(event => {
     // Execute your command here
     triggerModal();
   }
-}, 500)
+}, 1000)
 
 
 // animeID.set(data.mal_id)
@@ -219,8 +219,8 @@ const handleKeyDown = debounce(event => {
 
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
-    <section class="md:w-[500px] w-full text-token md:mt-40 mt-20 card border-none border-0 ">
-      <input class="input rounded-lg md:w-full w-[400px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
+    <section class="w-[350px] md:w-[500px] xl:w-[520px] mt-20 md:mt-30 xl:mt-40 text-token  card border-none border-0 ">
+      <input class="input rounded-lg w-[350px] md:w-[500px] xl:w-[520px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
       <ul class="list border-none">
         <!-- {JSON.stringify($animeData)} -->
         {#if isUpdated}
@@ -241,7 +241,7 @@ const handleKeyDown = debounce(event => {
                 <Avatar src={data.images.jpg.small_image_url} width="w-[50px]" />
               </div>
               <div class="text-left left-0 w-full border-none">
-                <h6 class="h6 flex-auto text-left md:w-96 w-72 truncate"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px] ">Anime</span> {data.genres.find((genre) => genre.name === 'Award Winning') ? '🏆 ' : ''}{data.titles[0].title}</h6>
+                <h6 class="h6 flex-auto text-left w-60 md:w-[24rem] md:w-96 truncate"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px] ">Anime</span> {data.genres.find((genre) => genre.name === 'Award Winning') ? '🏆 ' : ''}{data.titles[0].title}</h6>
                 <span class="chip variant-soft-primaryry px-[4px] py-[1px]">⭐ {data.score ? data.score : '....'} </span>
                 <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🗓️ {data.aired.prop.from.year ? data.aired.prop.from.year : '....'} </span>
                 <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🧬 {data.genres[0]?.name ? data.genres[0].name : '....'}</span>
