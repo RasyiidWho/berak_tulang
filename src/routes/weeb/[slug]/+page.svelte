@@ -258,7 +258,7 @@
         <div class="ml-9 sm:ml-6 overflow-hidden">
           <div>
             {#if anime}
-              <Ratings justify="start" value={Math.round((anime.score/2) * 2+0.4) / 2} max={5}>
+              <Ratings justify="start" value={Math.round((anime.score / 2) * 2 + 0.4) / 2} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="20" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="20" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="20" /></svelte:fragment>
@@ -303,7 +303,7 @@
         <div class="text-center w-full -mt-2 z-50">
           <div class="pt-3 text-center">
             {#if anime}
-              <Ratings justify="justify-center" value={Math.round((anime.score/2) * 2+0.4) / 2} max={5}>
+              <Ratings justify="justify-center" value={Math.round((anime.score / 2) * 2 + 0.4) / 2} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="30" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="30" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="30" /></svelte:fragment>
@@ -355,8 +355,8 @@
         </div>
         <div style="font-size: 0;" class="pt-2 pl-5 pr-5 block flex-wrap overflow-x-hidden box-content">
           {#if anime}
-            {#if anime.studio === 'object'}
-              {#each anime.studio as studio}
+            {#if anime.studios === 'object'}
+              {#each anime.studios as studio}
                 <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
               {/each}
             {:else}
@@ -399,9 +399,9 @@
         </div>
         <div class="block opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
           {#if anime}
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#14213 Rank</h2>
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#123113 Popular</h2>
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">203,182 User</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.rank ? anime?.rank : '...'} Rank,</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.popularity ? anime?.popularity : '...'} Popular,</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">{anime?.members ? anime?.members : '...'} Members</h2>
           {/if}
         </div>
         <!-- <div class="relative w-[250px]">
@@ -418,36 +418,37 @@
             <div class="p-4">
               <h2 class="h2">Characters</h2>
               <article>
-                <div>List of characters that played</div>
+                <div class="opacity-50 pb-2">List of characters that played</div>
                 <swiper-container bind:this={swiper} free-mode="true">
                   <!-- <div class="relative flex w-[250px]"> -->
 
                   {#each Object.keys(animeCharRingkas) as index}
-                  <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
+                    <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
                     <swiper-slide>
                       <div class="relative">
                         <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
                         <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
                           <p class="text-sm text-gray-300">{index}</p>
                         </div>
-                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
                           <p class="text-sm text-gray-300">❤️‍🔥 {animeCharRingkas[index][0]}</p>
                         </div>
                       </div>
 
-                      <div class="relative">
-                        <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4]:animeCharRingkas[index][3]} />
-                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
+                      {#if animeCharRingkas[index].length >= 4}
+                        <div class="relative">
+                          <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4] : animeCharRingkas[index][3]} />
+                          <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                            <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
+                          </div>
                         </div>
-                      </div>
+                      {/if}
                     </swiper-slide>
                   {/each}
 
                   {#if animeChar}
                     {#each animeChar as char}
-                      {#if !char.character.images.webp.image_url.includes('questionmark')}
-                      {/if}
+                      {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
                     {/each}
                   {/if}
                 </swiper-container>
@@ -464,7 +465,16 @@
               <div class="p-4">
                 <h2 class="h2">Studios</h2>
                 <article class="opacity-50">
-                  <p>Wit Studio, CloverWorks</p>
+                  <p>
+                    {#if anime}
+                      <!-- {#if anime.studios === 'object'} -->
+                        {#each anime.studios as studio}
+                          <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
+                          {studio.name},
+                        {/each}
+                      <!-- {/if} -->
+                    {/if}
+                  </p>
                 </article>
               </div>
             </a>
@@ -494,8 +504,26 @@
             </header> -->
               <div class="p-4">
                 <h2 class="h2">Trailer</h2>
+                <article class="opacity-100">
+                  <div class="pt-1">
+                    <iframe class="w-full aspect-video rounded-lg" src={anime?.trailer ? String(anime.trailer.embed_url).replace('autoplay=1', 'autoplay=0') : ''} allowfullscreen></iframe>
+                  </div>
+                </article>
+              </div>
+            </a>
+          </div>
+          <div>
+            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
+              <!-- <header>
+              {#if anime}
+                <img class="bg-black/50" src={animeChar[0].character.images.webp.image_url} alt="Post" />
+              {/if}
+            </header> -->
+              <div class="p-4">
+                <h2 class="h2">Status</h2>
                 <article class="opacity-50">
-                  <p>IKI NKO PLACEHOLDER TRAILER</p>
+                  <p>Currently Airing...</p>
+                  <p>Broadcast at Saturdays at 23:00 (JST)</p>
                 </article>
               </div>
             </a>
@@ -513,39 +541,19 @@
           </footer> -->
         <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
           <Accordion>
-            <AccordionItem open>
+            <AccordionItem hover="!bg-transparent" open>
               <svelte:fragment slot="lead"><Icon icon="fluent-emoji:banana" width="32px" /></svelte:fragment>
               <svelte:fragment slot="summary"><h2 class="h2">Episodes & Relation</h2></svelte:fragment>
-              <svelte:fragment slot="content">
-                <!-- <section class="snap-x snap-mandatory scroll-smooth flex gap-2 pb-2 overflow-x-auto">
-                  
-                      {#if animeChar}
-                      {#each animeChar as image}
-                      
-                        {#if !image.character.images.webp.image_url.includes("questionmark")}
-                        <div>
-                        <img class="lazyload h-auto max-w-full rounded-lg" src={image.character.images.webp.image_url} />
-                      </div>
-                        {/if}
-                    {/each}
-                    {/if}
-                </section> -->
-                <!-- <div class="grid grid-cols-3">
-                  <div>Item 1</div>
-                  <div>Item 2</div>
-                  <div>Item 3</div>
-                  <!== More items ==>
-                </div> -->
-              </svelte:fragment>
+              <svelte:fragment slot="content"></svelte:fragment>
             </AccordionItem>
-            <AccordionItem open>
+            <AccordionItem hover="!bg-transparent" open>
               <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px" /></svelte:fragment>
               <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
               <svelte:fragment slot="content">
                 {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
               </svelte:fragment>
             </AccordionItem>
-            <AccordionItem open>
+            <AccordionItem hover="!bg-transparent" open>
               <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beach-with-umbrella" width="32px" /></svelte:fragment>
               <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
               <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
