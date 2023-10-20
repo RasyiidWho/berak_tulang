@@ -13,6 +13,7 @@
   import { register } from 'swiper/element/bundle';
   import { browser } from '$app/environment';
   import { debounce } from '$lib/debounce.js';
+  import { writable } from 'svelte/store';
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -20,7 +21,6 @@
   let isLoadingImage = false;
   let isLoadingImageHTML;
   let timeHorizontal: number = 1;
-  let displayJapanese = false;
 
   let swiper;
 
@@ -54,7 +54,15 @@
     AlasanBerak.update(() => v);
   };
 
-  let countVA = 0;
+  // let countVA = 0;
+
+  // Nganggo gawe data JSON opo array opo sakarepmu,
+  // Sek penting isine iso diubah-ubah nganggo
+  // $1.update(ISINE) // Ngupdate isine (append)
+  // $1.set(ISINE) // Ngereset isine
+
+  // FUNGSI PALING PENTING, NGGO NGESHARE VARIABLE & STATE
+  // ANTAR FILE
 
   // Nganggo gawe data JSON opo array opo sakarepmu,
   // Sek penting isine iso diubah-ubah nganggo
@@ -170,19 +178,16 @@
           slidesPerView: 5
         },
         1024: {
-          slidesPerView: 6
+          slidesPerView: 7
         }
-      }
+      },
+      freeMode: true
     });
     swiper.initialize();
   });
 
   let previousSlug = data.slug;
 
-  function setdisplayJapanese(){
-    displayJapanese = false
-  };
-  
 
   afterUpdate(() => {
     const currentSlug = data.slug;
@@ -200,7 +205,6 @@
   // $: printAnimePromise(data.slug);
   // printAnimePromise(1)
   $: data.slug;
-  $: displayJapanese
 </script>
 
 <!-- 
@@ -399,7 +403,7 @@
               <h2 class="h2">Characters</h2>
               <article>
                 <div>List of characters that played</div>
-                <swiper-container bind:this={swiper} slides-per-view="5">
+                <swiper-container bind:this={swiper} free-mode="true">
                   <!-- <div class="relative flex w-[250px]"> -->
                   {#if animeChar}
                     {#each animeChar as char}
@@ -410,19 +414,21 @@
                             <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
                               <p class="text-sm text-gray-300">{char.character.name}</p>
                             </div>
+                            <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                              <p class="text-sm text-gray-300">❤️‍🔥 {char.favorites}</p>
+                            </div>
                           </div>
 
                           {#if char.voice_actors[0]}
-                            {#each char.voice_actors as voice_actor, countVA(countVA)}
-                            <!-- <h1>{voice_actor.person.name}</h1> -->
-                              {#if voice_actor.language === "Japanese" && countVA === 0}
-                              <div class="relative">
-                              <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
-                              <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                                <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
-                              </div>
-                            </div>
-                            <h1 class="hidden">{countVA+1}</h1>
+                            {#each char.voice_actors as voice_actor, x}
+                              <!-- <h1>{voice_actor.person.name}</h1> -->
+                              {#if voice_actor.language === 'Japanese'}
+                                <div class="{x == 1 ? 'hidden' : 'relative'}">
+                                  <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
+                                  <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                                    <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
+                                  </div>
+                                </div>
                               {/if}
                             {/each}
                           {/if}
