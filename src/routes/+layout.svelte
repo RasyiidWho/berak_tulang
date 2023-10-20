@@ -2,7 +2,7 @@
   import '../app.postcss';
   import logo from '$lib/assets/berak.png';
   import '$lib/assets/global.css';
-  import { initializeStores } from '@skeletonlabs/skeleton';
+  import { initializeStores, focusTrap } from "@skeletonlabs/skeleton";
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { get, writable } from 'svelte/store';
   import { throttle, debounce } from 'lodash-es';
@@ -26,6 +26,7 @@
   let animeNameSedurunge = '';
   let isVisible = true;
   let isUpdated = false;
+  let isFocused: boolean = false;
 
   import { animeData, animeNamex, animeID } from '$lib/stores';
   import { onDestroy, onMount } from 'svelte';
@@ -133,7 +134,6 @@
   }
   
 
-
   
   function animeIDSet(data) {
     if (data !== $animeData) {
@@ -158,8 +158,8 @@
     const scroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
     if (scroll > previousScroll ) {
       isScrollTotal++;
-      if (isScrollTotal > 20) {
-        console.log("isScrollTotal: " + isScrollTotal)
+      if (isScrollTotal > 10) {
+        // console.log("isScrollTotal: " + isScrollTotal)
         // setTimeout(() => {
         // console.log('Upscroll');
         isScrollUp = false
@@ -196,6 +196,18 @@ const handleKeyDown = debounce(event => {
   }
 }, 1000)
 
+function handleKeyO(event){
+  // animeNameSedurunge = animeName;
+  if (event.key === 'F2' && !$modalStore[0]) {
+    // Execute your command here
+    isFocused = true;
+    triggerModal();
+  }
+  //  else if (event.key === 'o' && $modalStore[0]) {
+    // modalStore.close();
+  // }
+};
+
 
 // animeID.set(data.mal_id)
 
@@ -217,10 +229,13 @@ const handleKeyDown = debounce(event => {
 ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
 -->
 
+
 {#if $modalStore[0]}
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
     <section class="w-[350px] md:w-[500px] xl:w-[520px] mt-20 md:mt-30 xl:mt-40 text-token  card border-none border-0 ">
-      <input class="input rounded-lg w-[350px] md:w-[500px] xl:w-[520px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
+      <form use:focusTrap={isFocused}>
+        <input class="input rounded-lg w-[350px] md:w-[500px] xl:w-[520px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
+      </form>
       <ul class="list border-none">
         <!-- {JSON.stringify($animeData)} -->
         {#if isUpdated}
@@ -287,7 +302,7 @@ const handleKeyDown = debounce(event => {
   </div>
 {/if}
 <Modal />
-<!-- <svelte:window on:keydown={handleKeyDown} /> -->
+<svelte:window on:keydown={handleKeyO} />
 <!-- <AppShell>
   <svelte:fragment slot="header">
     <AppBar background="bg-transparent {$modalStore[0] ? 'blur-md' : ''}">

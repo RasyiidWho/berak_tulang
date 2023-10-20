@@ -45,9 +45,9 @@
 
   // Fungsi nggo ngupdate, sangkutke neng button nggo update value'ne
   // Templekke neng on:, contoh: on:click={() => updateAlasanBerak(AlasanBerak)}
-  const updateAlasanBerak = (v) => {
-    AlasanBerak.update(() => v);
-  };
+  // const updateAlasanBerak = (v) => {
+  //   AlasanBerak.update(() => v);
+  // };
 
   let isLoading = false;
   let isLoadingImage = false;
@@ -130,17 +130,24 @@ animeID.subscribe((v) => {
 ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
 -->
 
+<style>
+  #logo {
+    visibility: hidden;
+  }
+</style>
+
 
 <div class="container {$modalStore[0] ? 'blur-3xl' : ''} pt-5">
   <div class="flex w-screen">
     <div class="m-auto grid grid-cols-1 gap-2 text-center pt-20">
-      <b transition:fade class="btn !bg-transparent h-96 -z-50">
+      <!-- <b transition:fade class="btn !bg-transparent h-96 -z-50">
         <img class="md:w-[400px] w-[2000px] rounded-md" src="{berak}" alt="logo" />
-      </b>
-      <h1 class="h1" on:click={() => modalStore.trigger(modal)}>{wibuAnime}</h1>
-      <form action="" use:focusTrap={isFocused}>
+      </b> -->
+      <spline-viewer class="hide" url="https://prod.spline.design/mYqynR66CUUnDVjU/scene.splinecode"></spline-viewer>
+      <!-- <h1 class="h1" on:click={() => modalStore.trigger(modal)}>{wibuAnime}</h1> -->
+      <!-- <form action="" use:focusTrap={isFocused}>
         <input on:click={() => modalStore.trigger(modal)} class="input rounded-lg md:w-full w-[400px] variant-form-material" style="text-decoration: none !important;" spellcheck="false" placeholder="Pssst... Click me!" />
-      </form>
+      </form> -->
       
       <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
         <div class="m-5">

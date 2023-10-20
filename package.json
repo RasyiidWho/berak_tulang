@@ -41,10 +41,12 @@
 	"dependencies": {
 		"@floating-ui/dom": "^1.5.3",
 		"@shineiichijo/marika": "^3.0.0",
+		"@splinetool/runtime": "^0.9.485",
 		"compiler": "^0.1.2",
 		"embla-carousel-svelte": "^8.0.0-rc14",
 		"eslint": "^8.51.0",
 		"eslint-plugin-svelte": "^2.34.0",
+		"gsap": "^3.12.2",
 		"just-debounce-it": "^3.2.0",
 		"lazysizes": "^5.3.2",
 		"lodash-es": "^4.17.21",

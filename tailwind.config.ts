@@ -10,6 +10,11 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}', join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')],
 	theme: {
 		extend: {
+			hide: {
+				'#logo': {
+				  display: 'none',
+				},
+			  },
 			animation: {
 				'spin-slow': 'spin 15s linear infinite',
 				'pulse-slow': 'ping 1s linear infinite',
