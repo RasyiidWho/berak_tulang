@@ -74,6 +74,8 @@
 
   let anime;
   let animeChar;
+  let animeCharRingkas = {};
+  let animeCharRingkasJSON;
 
   async function printAnimePromise(id) {
     isLoading = true;
@@ -89,10 +91,24 @@
       const [response1, response2] = await Promise.all([response1Promise, response2Promise]);
       // await sleep(5000);
       if (response1.ok && response2.ok) {
+        animeCharRingkas = {};
         const data = await response1.json();
         const dataChar = await response2.json();
         anime = data.data;
         animeChar = dataChar.data;
+        animeChar.forEach((data) => {
+          const fav = data.favorites;
+          const imageJPEG = data.character.images.jpg.image_url;
+          const va = data.voice_actors.filter((actor) => actor.language === 'Japanese').map((actor) => actor.person.name);
+          const vaJPEG = data.voice_actors.filter((actor) => actor.language === 'Japanese').map((actor) => actor.person.images.jpg.image_url);
+
+          data.japaneseVoiceActors = Array.from(new Set([fav, imageJPEG, ...va, ...vaJPEG]));
+
+          // Collect unique Japanese voice actors in animeCharRingkas
+          animeCharRingkas[data.character.name] = data.japaneseVoiceActors;
+        });
+        // animeCharRingkasJSON = JSON.parse(animeCharRingkas)
+        console.log('animeCharRingkas: ' + JSON.stringify(animeCharRingkas));
         // response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuGambar = datos.images.webp.image_url) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuRating = datos.score) : (wibuRating = 10);
@@ -154,6 +170,7 @@
 
   $: isLoading;
   $: isLoadingImage;
+  $: animeCharRingkasJSON;
   // $: console.log('timeHorizontal: ' + timeHorizontal);
   // $: if (timeHorizontal == 1) {
   //   console.log('aktirrrrrrrrrrrrr');
@@ -187,7 +204,6 @@
   });
 
   let previousSlug = data.slug;
-
 
   afterUpdate(() => {
     const currentSlug = data.slug;
@@ -405,56 +421,36 @@
                 <div>List of characters that played</div>
                 <swiper-container bind:this={swiper} free-mode="true">
                   <!-- <div class="relative flex w-[250px]"> -->
+
+                  {#each Object.keys(animeCharRingkas) as index}
+                  <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
+                    <swiper-slide>
+                      <div class="relative">
+                        <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
+                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <p class="text-sm text-gray-300">{index}</p>
+                        </div>
+                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <p class="text-sm text-gray-300">❤️‍🔥 {animeCharRingkas[index][0]}</p>
+                        </div>
+                      </div>
+
+                      <div class="relative">
+                        <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4]:animeCharRingkas[index][3]} />
+                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
+                        </div>
+                      </div>
+                    </swiper-slide>
+                  {/each}
+
                   {#if animeChar}
                     {#each animeChar as char}
                       {#if !char.character.images.webp.image_url.includes('questionmark')}
-                        <swiper-slide>
-                          <div class="relative">
-                            <img alt={char.character.name} class="object-cover rounded-t-lg px-0.5" src={char.character.images.jpg.image_url} />
-                            <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                              <p class="text-sm text-gray-300">{char.character.name}</p>
-                            </div>
-                            <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                              <p class="text-sm text-gray-300">❤️‍🔥 {char.favorites}</p>
-                            </div>
-                          </div>
-
-                          {#if char.voice_actors[0]}
-                            {#each char.voice_actors as voice_actor, x}
-                              <!-- <h1>{voice_actor.person.name}</h1> -->
-                              {#if voice_actor.language === 'Japanese'}
-                                <div class="{x == 1 ? 'hidden' : 'relative'}">
-                                  <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
-                                  <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                                    <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
-                                  </div>
-                                </div>
-                              {/if}
-                            {/each}
-                          {/if}
-                        </swiper-slide>
                       {/if}
                     {/each}
                   {/if}
                 </swiper-container>
-                <!-- {#each items as item}
-                    <swiper-slide>
-                      <div class="relative">
-                        <img class="w-[250px] h-[250px] object-cover rounded-t-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
-                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
-                        </div>
-                      </div>
-                      <div class="relative">
-                        <img class="w-[250px] h-[250px] object-cover rounded-b-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
-                        <div class="absolute bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <h3 class="text-xl text-white font-bold">Kurumizawa McDowell, Satanichia</h3>
-                          <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
-                        </div>
-                      </div>
-                    </swiper-slide>
-                  {/each} -->
-                <!-- </div> -->
               </article>
             </div>
           </div>
