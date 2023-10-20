@@ -8,7 +8,7 @@
   import 'lazysizes';
   export let data;
   import 'lazysizes/plugins/parent-fit/ls.parent-fit';
-  import { onMount } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   import { trimTextAfterWord } from '$lib/trim.js';
   import { register } from 'swiper/element/bundle';
   import { browser } from '$app/environment';
@@ -20,6 +20,9 @@
   let isLoadingImage = false;
   let isLoadingImageHTML;
   let timeHorizontal: number = 1;
+  let displayJapanese = false;
+
+  let swiper;
 
   // init Swiper:
 
@@ -51,6 +54,8 @@
     AlasanBerak.update(() => v);
   };
 
+  let countVA = 0;
+
   // Nganggo gawe data JSON opo array opo sakarepmu,
   // Sek penting isine iso diubah-ubah nganggo
   // $1.update(ISINE) // Ngupdate isine (append)
@@ -61,8 +66,6 @@
 
   let anime;
   let animeChar;
-
-  console.log("ahah")
 
   async function printAnimePromise(id) {
     isLoading = true;
@@ -89,10 +92,10 @@
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
         // await sleep(2000);
         isLoading = false;
-        // await sleep(3000);
+        await sleep(3000);
+
         isLoadingImage = false;
         // await sleep(5000);
-        register();
       } else {
         // debounce(printAnimePromise(data.slug),10000)
         console.error('Failed to fetch data from the API');
@@ -152,14 +155,52 @@
   let items = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
   onMount(() => {
+    register();
     // isLoading = true;
     // isLoadingImage = true;
     console.log('slug:' + data.slug);
     printAnimePromise(data.slug);
+
+    Object.assign(swiper, {
+      breakpoints: {
+        1: {
+          slidesPerView: 4
+        },
+        768: {
+          slidesPerView: 5
+        },
+        1024: {
+          slidesPerView: 6
+        }
+      }
+    });
+    swiper.initialize();
+  });
+
+  let previousSlug = data.slug;
+
+  function setdisplayJapanese(){
+    displayJapanese = false
+  };
+  
+
+  afterUpdate(() => {
+    const currentSlug = data.slug;
+
+    if (currentSlug !== previousSlug) {
+      // Slug has changed
+      console.log('Slug has changed:', currentSlug);
+
+      printAnimePromise(data.slug);
+
+      previousSlug = currentSlug; // Update the previous slug
+    }
   });
   // $: anime
-  $: printAnimePromise(data.slug);
+  // $: printAnimePromise(data.slug);
   // printAnimePromise(1)
+  $: data.slug;
+  $: displayJapanese
 </script>
 
 <!-- 
@@ -233,7 +274,7 @@
           <img
             alt="cover"
             bind:this={isLoadingImageHTML}
-            class="lazyload md:w-[360px] xl:min-w-[300px] 2xl:min-w-[600px] rounded-md
+            class="lazyload md:w-[360px] xl:min-w-[300px] 2xl:min-w-[500px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
@@ -358,22 +399,7 @@
               <h2 class="h2">Characters</h2>
               <article>
                 <div>List of characters that played</div>
-                <swiper-container
-                  free-mode="true"
-                  space-between="0"
-                  slides-per-view="5"
-                  breakpoints={{
-                    1: {
-                      slidesPerView: 4
-                    },
-                    768: {
-                      slidesPerView: 5
-                    },
-                    1280: {
-                      slidesPerView: 6
-                    }
-                  }}
-                >
+                <swiper-container bind:this={swiper} slides-per-view="5">
                   <!-- <div class="relative flex w-[250px]"> -->
                   {#if animeChar}
                     {#each animeChar as char}
@@ -387,14 +413,16 @@
                           </div>
 
                           {#if char.voice_actors[0]}
-                            {#each char.voice_actors as voice_actor, index}
-                              {#if voice_actor.language === 'Japanese' && index === 0}
-                                <div class="relative">
-                                  <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
-                                  <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                                    <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
-                                  </div>
-                                </div>
+                            {#each char.voice_actors as voice_actor, countVA(countVA)}
+                            <!-- <h1>{voice_actor.person.name}</h1> -->
+                              {#if voice_actor.language === "Japanese" && countVA === 0}
+                              <div class="relative">
+                              <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
+                              <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                                <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
+                              </div>
+                            </div>
+                            <h1 class="hidden">{countVA+1}</h1>
                               {/if}
                             {/each}
                           {/if}

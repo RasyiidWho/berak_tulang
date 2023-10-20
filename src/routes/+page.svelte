@@ -157,7 +157,7 @@ animeID.subscribe((v) => {
 
 <div class="container flex justify-center h-full w-full max-h-full max-w-full  {$modalStore[0] ? 'blur-3xl' : ''}">
   <!-- <div class="flex justify-center"> -->
-    <canvas class="block" bind:this={canvas3d}></canvas>
+    <!-- <canvas class="block" bind:this={canvas3d}></canvas> -->
     <!-- <div class="m-auto grid grid-cols-1 gap-2 text-center pt-20">
       <!== <b transition:fade class="btn !bg-transparent h-96 -z-50">
         <img class="md:w-[400px] w-[2000px] rounded-md" src="{berak}" alt="logo" />
