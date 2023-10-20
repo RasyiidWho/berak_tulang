@@ -258,7 +258,7 @@
         <div class="ml-9 sm:ml-6 overflow-hidden">
           <div>
             {#if anime}
-              <Ratings justify="start" value={Math.abs(anime.score / 2) + 1} max={5}>
+              <Ratings justify="start" value={Math.round((anime.score/2) * 2+0.4) / 2} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="20" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="20" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="20" /></svelte:fragment>
@@ -303,7 +303,7 @@
         <div class="text-center w-full -mt-2 z-50">
           <div class="pt-3 text-center">
             {#if anime}
-              <Ratings justify="justify-center" value={Math.abs(anime.score / 2) + 1} max={5}>
+              <Ratings justify="justify-center" value={Math.round((anime.score/2) * 2+0.4) / 2} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="30" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="30" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="30" /></svelte:fragment>
