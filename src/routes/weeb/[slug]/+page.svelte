@@ -354,6 +354,7 @@
           <h1 class="h1 absolute opacity-10 pl-5 lg:-mt-3 overflow-hidden">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
         </div>
         <div style="font-size: 0;" class="pt-2 pl-5 pr-5 block flex-wrap overflow-x-hidden box-content">
+          <a target="_blank" href="https://myanimelist.net/anime/{data.slug}" class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">MAL</a>
           {#if anime}
             {#if anime.studios === 'object'}
               {#each anime.studios as studio}
@@ -397,7 +398,7 @@
             {/if}
           {/if}
         </div>
-        <div class="block opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
+        <div class="relative opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
           {#if anime}
             <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.rank ? anime?.rank : '....'} Rank,</h2>
             <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.popularity ? anime?.popularity : '....'} Popular,</h2>
