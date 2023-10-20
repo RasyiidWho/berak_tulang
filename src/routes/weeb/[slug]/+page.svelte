@@ -258,13 +258,13 @@
         <div class="ml-9 sm:ml-6 overflow-hidden">
           <div>
             {#if anime}
-              <Ratings justify="start" value={Math.round((anime.score / 2) * 2 + 0.4) / 2} max={5}>
+              <Ratings justify="start" value={anime.score !== null ? Math.round((anime.score / 2) * 2 + 0.4) / 2 : 0 } max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="20" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="20" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="20" /></svelte:fragment>
               </Ratings>
-              <div class="pt-0 sm:pt-2">
-                <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:star" class="mr-1" /> {anime.score}</span>
+              <div class="pt-1 sm:pt-2">
+                <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:star" class="mr-1" /> {anime.score !== null ? anime.score : '....'}</span>
                 <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:spiral-calendar" class="mr-1" /> {anime.aired.prop.from.year}</span>
                 <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0"><Icon icon="fluent-emoji:admission-tickets" class="mr-1" /> {trimTextAfterWord(anime.duration, 'min')} + {anime.episodes} eps</span>
                 <!-- <h6>rating . tahun . durasi + eps</h6> -->
@@ -313,7 +313,7 @@
         </div>
         <div class="pt-1">
           {#if anime}
-            <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0 text-lg"><Icon icon="fluent-emoji:star" class="mr-2" /> {anime.score}</span>
+            <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0 text-lg"><Icon icon="fluent-emoji:star" class="mr-2" /> {anime.score !== null ? anime.score : '....'}</span>
             <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0 text-lg"><Icon icon="fluent-emoji:spiral-calendar" class="mr-2" /> {anime.aired.prop.from.year}</span>
             <span class="chip rounded-full !bg-transparent my-0 ml-0 pl-0 text-lg"><Icon icon="fluent-emoji:popcorn" class="mr-2" /> {trimTextAfterWord(anime.duration, 'min')} @ {anime.episodes} eps</span>
             <!-- <h6>rating . tahun . durasi + eps</h6> -->
@@ -399,9 +399,9 @@
         </div>
         <div class="block opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
           {#if anime}
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.rank ? anime?.rank : '...'} Rank,</h2>
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.popularity ? anime?.popularity : '...'} Popular,</h2>
-            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">{anime?.members ? anime?.members : '...'} Members</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.rank ? anime?.rank : '....'} Rank,</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.popularity ? anime?.popularity : '....'} Popular,</h2>
+            <h2 class="chip m-0 p-0 lg:text-4xl text-xl">{anime?.members ? anime?.members : '....'} Members</h2>
           {/if}
         </div>
         <!-- <div class="relative w-[250px]">
@@ -496,8 +496,8 @@
                 <article class="opacity-50">
                   {#if anime}
                     <p>{anime?.status ? anime.status : 'Not Identified'}</p>
-                    <p>Start: {anime?.aired ? String(anime.aired.to).replace('T00:00:00+00:00', '') : ''}</p>
-                    <p>End: {anime?.aired ? String(anime.aired.to).replace('T00:00:00+00:00', '') : ''}</p>
+                    <p>Start: {anime.aired.from !== null ? String(anime.aired.from).replace('T00:00:00+00:00', '') : '....'}</p>
+                    <p>End: {anime.aired.to !== null ? String(anime.aired.to).replace('T00:00:00+00:00', '') : '....'}</p>
                   {/if}
                 </article>
               </div>
@@ -515,7 +515,7 @@
                 <article class="opacity-100">
                   <div class="pt-1">
                     {#if anime}
-                    <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url): "https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0"} allowfullscreen></iframe>
+                    <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url).replace("autoplay=1", "autoplay=0"): "https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0"} allowfullscreen></iframe>
                     {/if}
 
                   </div>
@@ -534,9 +534,9 @@
                 <h2 class="h2">Addition</h2>
                 <article class="opacity-50">
                   {#if anime}
-                    <p>Type: {anime?.type ? anime.type : '...'}</p>
-                    <p>Source: {anime?.source ? anime.source : '...'}</p>
-                    <p>Age Rate: {anime?.rating ? anime.rating : '...'}</p>
+                    <p>Type: {anime?.type ? anime.type : '....'}</p>
+                    <p>Source: {anime?.source ? anime.source : '....'}</p>
+                    <p>Age Rate: {anime?.rating ? anime.rating : '....'}</p>
                   {/if}
                 </article>
               </div>
@@ -572,7 +572,6 @@
               <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
               <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
             </AccordionItem>
-            <!-- ... -->
           </Accordion>
         </div>
       </div>
