@@ -467,12 +467,17 @@
                 <article class="opacity-50">
                   <p>
                     {#if anime}
-                      <!-- {#if anime.studios === 'object'} -->
+                      {#if anime.studios[1]}
                         {#each anime.studios as studio}
                           <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
                           {studio.name},
                         {/each}
-                      <!-- {/if} -->
+                      {:else}
+                        {#each anime.studios as studio}
+                          <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
+                          {studio.name}
+                        {/each}
+                      {/if}
                     {/if}
                   </p>
                 </article>
@@ -489,8 +494,11 @@
               <div class="p-4">
                 <h2 class="h2">Status</h2>
                 <article class="opacity-50">
-                  <p>Currently Airing...</p>
-                  <p>Broadcast at Saturdays at 23:00 (JST)</p>
+                  {#if anime}
+                    <p>{anime?.status ? anime.status : 'Not Identified'}</p>
+                    <p>Start: {anime?.aired ? String(anime.aired.to).replace('T00:00:00+00:00', '') : ''}</p>
+                    <p>End: {anime?.aired ? String(anime.aired.to).replace('T00:00:00+00:00', '') : ''}</p>
+                  {/if}
                 </article>
               </div>
             </a>
@@ -506,7 +514,10 @@
                 <h2 class="h2">Trailer</h2>
                 <article class="opacity-100">
                   <div class="pt-1">
-                    <iframe class="w-full aspect-video rounded-lg" src={anime?.trailer ? String(anime.trailer.embed_url).replace('autoplay=1', 'autoplay=0') : ''} allowfullscreen></iframe>
+                    {#if anime}
+                    <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url): "https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0"} allowfullscreen></iframe>
+                    {/if}
+
                   </div>
                 </article>
               </div>
@@ -520,10 +531,13 @@
               {/if}
             </header> -->
               <div class="p-4">
-                <h2 class="h2">Status</h2>
+                <h2 class="h2">Addition</h2>
                 <article class="opacity-50">
-                  <p>Currently Airing...</p>
-                  <p>Broadcast at Saturdays at 23:00 (JST)</p>
+                  {#if anime}
+                    <p>Type: {anime?.type ? anime.type : '...'}</p>
+                    <p>Source: {anime?.source ? anime.source : '...'}</p>
+                    <p>Age Rate: {anime?.rating ? anime.rating : '...'}</p>
+                  {/if}
                 </article>
               </div>
             </a>
@@ -541,11 +555,11 @@
           </footer> -->
         <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
           <Accordion>
-            <AccordionItem hover="!bg-transparent" open>
+            <!-- <AccordionItem hover="!bg-transparent" open>
               <svelte:fragment slot="lead"><Icon icon="fluent-emoji:banana" width="32px" /></svelte:fragment>
               <svelte:fragment slot="summary"><h2 class="h2">Episodes & Relation</h2></svelte:fragment>
               <svelte:fragment slot="content"></svelte:fragment>
-            </AccordionItem>
+            </AccordionItem> -->
             <AccordionItem hover="!bg-transparent" open>
               <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px" /></svelte:fragment>
               <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
