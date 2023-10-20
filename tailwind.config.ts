@@ -16,7 +16,8 @@ export default {
 				},
 			  },
 			animation: {
-				'spin-slow': 'spin 15s linear infinite',
+				'spin-slow': 'spin 10s linear infinite',
+				'spin-slowly': 'spin 60s linear infinite',
 				'pulse-slow': 'ping 1s linear infinite',
 				'unblur-05': 'unblur 0.5s',
 			  },

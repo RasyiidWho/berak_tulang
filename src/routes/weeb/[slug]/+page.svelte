@@ -1,24 +1,18 @@
 <script lang="ts">
-  import Carousel from 'svelte-carousel';
   import berak from '$lib/assets/berak.png';
   import { AlasanBerak } from '$lib/stores';
   import { sleep } from '$lib/sleep';
   import { fade } from 'svelte/transition';
   import { Accordion, AccordionItem, Avatar, RadioGroup, RadioItem, Ratings, getModalStore } from '@skeletonlabs/skeleton';
-  import { animeData, animeNamex, animeID } from '$lib/stores';
-  import { browser } from '$app/environment';
-  import { writable } from 'svelte/store';
   import Icon from '@iconify/svelte';
   import 'lazysizes';
   export let data;
-  import emblaCarouselSvelte from 'embla-carousel-svelte';
-  // import a plugin
   import 'lazysizes/plugins/parent-fit/ls.parent-fit';
   import { onMount } from 'svelte';
   import { trimTextAfterWord } from '$lib/trim.js';
   import { register } from 'swiper/element/bundle';
-  // register Swiper custom elements
-  register();
+  import { browser } from '$app/environment';
+  import { debounce } from '$lib/debounce.js';
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -77,8 +71,12 @@
     // animeData.set(0);
     // await sleep(5000);
     try {
-      const [response1, response2] = await Promise.all([fetch('https://api.jikan.moe/v4/anime/' + id + '/full'), fetch('https://api.jikan.moe/v4/anime/' + id + '/characters')]);
-      if (response1.ok) {
+      const response1Promise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
+      const response2Promise = new Promise((resolve) => debounce(resolve, 3000)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
+      const [response1, response2] = await Promise.all([response1Promise, response2Promise]);
+      // await sleep(5000);
+      if (response1.ok && response2.ok) {
+        register();
         const data = await response1.json();
         const dataChar = await response2.json();
         anime = data.data;
@@ -94,6 +92,7 @@
         isLoadingImage = false;
         // await sleep(5000);
       } else {
+        // debounce(printAnimePromise(data.slug),10000)
         console.error('Failed to fetch data from the API');
       }
       // console.log('animeData: ' + JSON.stringify($animeData));
@@ -102,10 +101,10 @@
       console.error('Error fetching anime data:', error);
     }
   }
-
-  // if(browser){
-
-  // }
+  let isFirefox;
+  if (browser) {
+    isFirefox = /Firefox/i.test(window.navigator.userAgent);
+  }
 
   // const throttledFunction = throttle(printAnimePromise, 3000, { isImmediate: false, maxWait: 5000 });
 
@@ -178,8 +177,8 @@
   ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░╚═╝╚══════╝ 
   -->
 
-<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 rounded-full opacity-40 lg:opacity-40 w-[800px] animate-spin-slow blur-[1000px]" src={anime?.images.webp.image_url} />
-<div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulsex blur-xlx disabledx' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
+<img alt="gambar muser" class="overflow-hidden lazyload fixed -z-50 rounded-full {isFirefox ? 'animate-spin-slowly opacity-5 w-[1500px]' : 'animate-spin-slow opacity-60 w-[800px]'}  blur-[1000px]" src={anime?.images.webp.image_url} />
+<div class="container hide-scrollbar lg:sticky space-x-0 h-full w-full m-0 p-0 lg:px-10 {$modalStore[0] ? 'blur-3xl' : ''} {isLoading ? 'animate-pulse blur-xl disabled' : 'block'} lg:pt-12 m-0 p-0 w-full max-w-full max-h-full h-full">
   <div class="flex flex-col lg:flex-row">
     <!-- 
 ███╗   ███╗ ██████╗ ██████╗ ██╗██╗     ███████╗
@@ -308,7 +307,7 @@
             {:else}
               <!-- <span class="chip variant-soft-primary mr-1 my-0">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span> -->
             {/if}
-            <span class="chip variant-soft-primary mr-1 my-0 text-sm animate-pulse text-yellow-100 mb-1">📀 Airing in 3 hour, 26 mins!</span>
+            <!-- <span class="chip variant-soft-primary mr-1 my-0 text-sm animate-pulse text-yellow-100 mb-1">📀 Airing in 3 hour, 26 mins!</span> -->
             <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">
               {#if anime}
                 {#if anime.season == 'fall'}
@@ -358,103 +357,72 @@
           </div>
           <img class="w-[250px] h-[250px] object-cover" src="https://cdn.myanimelist.net/images/voiceactors/1/62790.jpg" />
       </div> -->
-        <swiper-container slides-per-view="8">
-          <!-- <div class="relative flex w-[250px]"> -->
 
-          {#if animeChar}
-            {#each animeChar as char}
-              {#if !char.character.images.webp.image_url.includes('questionmark')}
-
-                <swiper-slide>
-                  <div class="relative">
-                    <img class="w-[250px] h-[250px] object-cover rounded-t-lg px-0.5" src={char.character.images.jpg.image_url} />
-                    <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                      <!-- <h3 class="text-xl text-white font-bold">Kurumizawa McDowell, Satanichia</h3> -->
-                      <p class="text-sm text-gray-300">{char.character.name}</p>
-                    </div>
-                  </div>
-
-                  <!-- {#if typeof char.voice_actors === "object"}
-                  <div class="relative">
-                    <img class="w-[250px] h-[250px] object-cover rounded-b-lg px-0.5" src={char.voice_actors[0].person.images.jpg.image_url} />
-                    <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                      <!== <h3 class="text-xl text-white font-bold">Kurumizawa McDowell, Satanichia</h3> ==>
-                      <p class="text-sm text-gray-300">{char.voice_actors[0].person.name}</p>
-                    </div>
-                  </div>
-                  {/if} -->
-
-                </swiper-slide>
-              {/if}
-            {/each}
-          {/if}
-          <!-- {#each items as item}
-            <swiper-slide>
-              <div class="relative">
-                <img class="w-[250px] h-[250px] object-cover rounded-t-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
-                <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                  <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
-                </div>
-              </div>
-              <div class="relative">
-                <img class="w-[250px] h-[250px] object-cover rounded-b-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
-                <div class="absolute bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                  <h3 class="text-xl text-white font-bold">Kurumizawa McDowell, Satanichia</h3>
-                  <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
-                </div>
-              </div>
-            </swiper-slide>
-          {/each} -->
-          <!-- </div> -->
-        </swiper-container>
         <div class="grid grid-cols-2 xl:grid-cols-4 grid-rows-1 gap-0 pt-10">
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4">
               <h2 class="h2">Characters</h2>
               <article>
-                <div>List of characters that played <span class="chip variant-soft animate-pulse"><Icon icon="fluent-emoji:yellow-heart" />Chars & Seyuus are Here!</span></div>
-                <div class="opacity-100 grid grid-cols-[auto_1fr_auto] items-center">
-                  <!-- EMBLA <div class="embla pt-5 flex" use:emblaCarouselSvelte on:emblaInit={onInit}>
-                    <div class="w-auto embla__container flex">
-                      {#if animeChar}
-                        {#each animeChar as char}
-                          {#if !char.character.images.webp.image_url.includes('questionmark')}
-                            <a href="#" class="w-[170px] opacity-100 shrink-0">
-                              <div class="text-center line-clamp-2">
-                                <h5 class="h5">{char.character.name}</h5>
+                <div>List of characters that played</div>
+                <swiper-container
+                  free-mode="true"
+                  space-between="0"
+                  slides-per-view="5"
+                  breakpoints={{
+                    1: {
+                      slidesPerView: 4
+                    },
+                    768: {
+                      slidesPerView: 5
+                    },
+                    1280: {
+                      slidesPerView: 6
+                    }
+                  }}
+                >
+                  <!-- <div class="relative flex w-[250px]"> -->
+                  {#if animeChar}
+                    {#each animeChar as char}
+                      {#if !char.character.images.webp.image_url.includes('questionmark')}
+                        <swiper-slide>
+                          <div class="relative">
+                            <img  alt={char.character.name} class="object-cover rounded-t-lg px-0.5" src={char.character.images.jpg.image_url} />
+                            <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                              <p class="text-sm text-gray-300">{char.character.name}</p>
+                            </div>
+                          </div>
+
+                          {#if char.voice_actors[0]}
+                            <div class="relative">
+                              <img alt={char.voice_actors[0].person.name} class="object-cover rounded-b-lg px-0.5" src={char.voice_actors[0].person.images.jpg.image_url} />
+                              <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                                <p class="text-sm text-gray-300">{char.voice_actors[0].person.name}</p>
                               </div>
-                              <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125" src={char.character.images.webp.image_url} alt="no" title="rrt" loading="lazy" />
-                            </a>
+                            </div>
                           {/if}
-                        {/each}
-                      {/if} -->
-
-                  <!-- {#each items as item}
-                    <a href="_blank" class="w-[170px] opacity-100 shrink-0">
-                      <div class="text-center line-clamp-2">
-                        <h5 class="h5">Jeneng Dowo Banget, TOk</h5>
+                        </swiper-slide>
+                      {/if}
+                    {/each}
+                  {/if}
+                </swiper-container>
+                <!-- {#each items as item}
+                    <swiper-slide>
+                      <div class="relative">
+                        <img class="w-[250px] h-[250px] object-cover rounded-t-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
+                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
+                        </div>
                       </div>
-                      <img class="w-48 embla__slide p-0.5 lazyload rounded-container-token hover:brightness-125n" src="https://picsum.photos/200/{item}?v={item}" alt="no" title="rrt" loading="lazy" />
-                    </a>
-                    {/each} -->
-                  <!-- </div> EMBLA -->
-
-                  <!-- {/each} -->
-                  <!-- </div>
-                  </div> -->
-                  <!-- <div bind:this={elemMovies} use:emblaCarouselSvelte class="embla pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar">
-                    <div class="embla__container">
-                        {#each items as item}
-                          <a target="_blank" class="embla__slide shrink-0 xl:w-[18%] w-[30%] snap-start">
-                            <img class="lazyload rounded-container-token hover:brightness-125" src="https://thecatapi.com/api/images/get?type=jpg&v={item}" alt="no" title="rrt" loading="lazy" />
-                          </a>
-                        {/each}
-                    </div> -->
-                  <!-- </div> -->
-
-                  <!-- <div class="pt-5 snap-x snap-mandatory scroll-smooth flex gap-1 overflow-x-auto hide-scrollbar"> -->
-                  <!-- </div> EMBLA -->
-                </div>
+                      <div class="relative">
+                        <img class="w-[250px] h-[250px] object-cover rounded-b-lg px-0.5" src="https://picsum.photos/200/{item}?v={item}" />
+                        <div class="absolute bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <h3 class="text-xl text-white font-bold">Kurumizawa McDowell, Satanichia</h3>
+                          <p class="text-sm text-gray-300">Kurumizawa McDowell, Satanichia</p>
+                        </div>
+                      </div>
+                    </swiper-slide>
+                  {/each} -->
+                <!-- </div> -->
               </article>
             </div>
           </div>

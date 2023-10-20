@@ -1,14 +1,11 @@
 <script lang="ts">
   import '../app.postcss';
-  import logo from '$lib/assets/berak.png';
   import '$lib/assets/global.css';
   import { initializeStores, focusTrap } from "@skeletonlabs/skeleton";
   import { getModalStore } from '@skeletonlabs/skeleton';
   import { get, writable } from 'svelte/store';
-  import { throttle, debounce } from 'lodash-es';
+  import { debounce } from 'lodash-es';
   import Icon from '@iconify/svelte';
-  import { LightSwitch } from '@skeletonlabs/skeleton';
-  import { trimText } from '$lib/trim';
 
   // Floating UI for Popups
   import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
