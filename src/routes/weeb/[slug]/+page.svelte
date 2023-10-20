@@ -62,6 +62,8 @@
   let anime;
   let animeChar;
 
+  console.log("ahah")
+
   async function printAnimePromise(id) {
     isLoading = true;
     isLoadingImage = true;
@@ -76,7 +78,6 @@
       const [response1, response2] = await Promise.all([response1Promise, response2Promise]);
       // await sleep(5000);
       if (response1.ok && response2.ok) {
-        register();
         const data = await response1.json();
         const dataChar = await response2.json();
         anime = data.data;
@@ -91,6 +92,7 @@
         // await sleep(3000);
         isLoadingImage = false;
         // await sleep(5000);
+        register();
       } else {
         // debounce(printAnimePromise(data.slug),10000)
         console.error('Failed to fetch data from the API');
@@ -138,14 +140,6 @@
   // $: wibuID = arrayAlasanBerak.slice(-1).pop();
   // $: printAnimePromise(wibuID);
   // $: printAnimePromise(animeIDx);
-
-  let emblaApi;
-  let options = { loop: true };
-
-  const onInit = (event) => {
-    emblaApi = event.detail;
-    console.log(emblaApi.slideNodes()); // Access API
-  };
 
   $: isLoading;
   $: isLoadingImage;
@@ -386,19 +380,23 @@
                       {#if !char.character.images.webp.image_url.includes('questionmark')}
                         <swiper-slide>
                           <div class="relative">
-                            <img  alt={char.character.name} class="object-cover rounded-t-lg px-0.5" src={char.character.images.jpg.image_url} />
+                            <img alt={char.character.name} class="object-cover rounded-t-lg px-0.5" src={char.character.images.jpg.image_url} />
                             <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
                               <p class="text-sm text-gray-300">{char.character.name}</p>
                             </div>
                           </div>
 
                           {#if char.voice_actors[0]}
-                            <div class="relative">
-                              <img alt={char.voice_actors[0].person.name} class="object-cover rounded-b-lg px-0.5" src={char.voice_actors[0].person.images.jpg.image_url} />
-                              <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                                <p class="text-sm text-gray-300">{char.voice_actors[0].person.name}</p>
-                              </div>
-                            </div>
+                            {#each char.voice_actors as voice_actor, index}
+                              {#if voice_actor.language === 'Japanese' && index === 0}
+                                <div class="relative">
+                                  <img alt={voice_actor.person.name} class="object-cover rounded-b-lg px-0.5" src={voice_actor.person.images.jpg.image_url} />
+                                  <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                                    <p class="text-sm text-gray-300">{voice_actor.person.name}</p>
+                                  </div>
+                                </div>
+                              {/if}
+                            {/each}
                           {/if}
                         </swiper-slide>
                       {/if}

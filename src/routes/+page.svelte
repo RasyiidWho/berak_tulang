@@ -5,6 +5,24 @@
   import { fade } from 'svelte/transition';
   import { Ratings, focusTrap, getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
   import { animeData, animeNamex, animeID } from '$lib/stores';
+  import { Application } from '@splinetool/runtime';
+    import { browser } from '$app/environment';
+    import { onMount } from 'svelte';
+
+  // make sure you have a canvas in the body
+  let canvas3d;
+
+  onMount(() => {
+    // myElement.addEventListener('click', handleClick);
+    if (browser) {
+      // start the application and load the scene
+  const spline = new Application(canvas3d);
+  spline.load('https://prod.spline.design/TRY4GvgtSIVQYCAA/scene.splinecode');
+
+  }
+  });
+
+
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -137,26 +155,28 @@ animeID.subscribe((v) => {
 </style>
 
 
-<div class="container {$modalStore[0] ? 'blur-3xl' : ''} pt-5">
-  <div class="flex w-screen">
-    <div class="m-auto grid grid-cols-1 gap-2 text-center pt-20">
-      <!-- <b transition:fade class="btn !bg-transparent h-96 -z-50">
+<div class="container flex justify-center h-full w-full max-h-full max-w-full  {$modalStore[0] ? 'blur-3xl' : ''}">
+  <!-- <div class="flex justify-center"> -->
+    <canvas class="block" bind:this={canvas3d}></canvas>
+    <!-- <div class="m-auto grid grid-cols-1 gap-2 text-center pt-20">
+      <!== <b transition:fade class="btn !bg-transparent h-96 -z-50">
         <img class="md:w-[400px] w-[2000px] rounded-md" src="{berak}" alt="logo" />
-      </b> -->
-      <spline-viewer class="hide" url="https://prod.spline.design/mYqynR66CUUnDVjU/scene.splinecode"></spline-viewer>
-      <!-- <h1 class="h1" on:click={() => modalStore.trigger(modal)}>{wibuAnime}</h1> -->
-      <!-- <form action="" use:focusTrap={isFocused}>
-        <input on:click={() => modalStore.trigger(modal)} class="input rounded-lg md:w-full w-[400px] variant-form-material" style="text-decoration: none !important;" spellcheck="false" placeholder="Pssst... Click me!" />
-      </form> -->
+      </b> ==>
+      <!== <spline-viewer class="hide" url="https://prod.spline.design/mYqynR66CUUnDVjU/scene.splinecode"></spline-viewer> ==>
       
-      <!-- <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> -->
+      <!== <h1 class="h1" on:click={() => modalStore.trigger(modal)}>{wibuAnime}</h1> ==>
+      <!== <form action="" use:focusTrap={isFocused}>
+        <input on:click={() => modalStore.trigger(modal)} class="input rounded-lg md:w-full w-[400px] variant-form-material" style="text-decoration: none !important;" spellcheck="false" placeholder="Pssst... Click me!" />
+      </form> ==>
+      
+      <!== <input class="btn button-base-styles bg-black" bind:value={animeName} on:click={() => animeNamex.set(animeName)}/> ==>
         <div class="m-5">
-          <!-- <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> -->
-          <!-- <h1 class="h1">Isine: {newValue}</h1> -->
-          <!-- <input class="input" type="text" on:change="{() => updateString(newValue)}" bind:value="{newValue}"> -->
-          <!-- <InputChip bind:value={arrayAlasanBerak} on:keydown={() =>animeNamex.set(animeName)} name="chips" on:add={() => updateAlasanBerak(arrayAlasanBerak)} placeholder="Type here_" /> -->
+          <!== <InputChip value="{data.jukuk}" name="chips" placeholder="Mengapa kamu ingin berak?" /> ==>
+          <!== <h1 class="h1">Isine: {newValue}</h1> ==>
+          <!== <input class="input" type="text" on:change="{() => updateString(newValue)}" bind:value="{newValue}"> ==>
+          <!== <InputChip bind:value={arrayAlasanBerak} on:keydown={() =>animeNamex.set(animeName)} name="chips" on:add={() => updateAlasanBerak(arrayAlasanBerak)} placeholder="Type here_" /> ==>
         </div>
 
-    </div>
-  </div>
+    </div> -->
+  <!-- </div> -->
 </div>
