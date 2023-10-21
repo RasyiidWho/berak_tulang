@@ -501,7 +501,7 @@
                   <p>
                     {#if anime}
                       {#if anime.title[0]}
-                        {#each anime.titles.slice(0, 6) as title}
+                        {#each anime.titles.slice(0, 2) as title}
                           {#if title.type === 'Synonym'}
                             {title.title}<br />
                           {/if}
