@@ -13,8 +13,7 @@
   import { register } from 'swiper/element/bundle';
   import { browser } from '$app/environment';
   import { debounce } from '$lib/debounce.js';
-  import { writable } from 'svelte/store';
-
+  
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
   let isLoading = false;
@@ -23,6 +22,7 @@
   let timeHorizontal: number = 1;
 
   let swiper;
+  let swiper_recom;
 
   // init Swiper:
 
@@ -75,27 +75,30 @@
   let anime;
   let animeChar;
   let animeCharRingkas = {};
-  let animeCharRingkasJSON;
+  let animeRecom;
 
   async function printAnimePromise(id) {
     isLoading = true;
     isLoadingImage = true;
-    console.log('printAnimePromise');
+    // console.log('printAnimePromise');
     // console.log('animeData: ' + JSON.stringify(animeData));
     // console.log('tulung executed');
     // animeData.set(0);
     // await sleep(5000);
     try {
-      const response1Promise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
-      const response2Promise = new Promise((resolve) => debounce(resolve, 3000)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
-      const [response1, response2] = await Promise.all([response1Promise, response2Promise]);
-      // await sleep(5000);
-      if (response1.ok && response2.ok) {
+      const fullPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
+      const charactersPromise = new Promise((resolve) => debounce(resolve, 1500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
+      const recommendationsPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations');
+      const [full, characters, recommendations] = await Promise.all([fullPromise, charactersPromise, recommendationsPromise]);
+      if (full.ok && characters.ok && recommendations.ok) {
+        await sleep(2000);
         animeCharRingkas = {};
-        const data = await response1.json();
-        const dataChar = await response2.json();
+        const data = await full.json();
+        const dataChar = await characters.json();
+        const dataRecom = await recommendations.json();
         anime = data.data;
         animeChar = dataChar.data;
+        animeRecom = dataRecom.data;
         animeChar.forEach((data) => {
           const fav = data.favorites;
           const imageJPEG = data.character.images.jpg.image_url;
@@ -107,7 +110,6 @@
           // Collect unique Japanese voice actors in animeCharRingkas
           animeCharRingkas[data.character.name] = data.japaneseVoiceActors;
         });
-        // animeCharRingkasJSON = JSON.parse(animeCharRingkas)
         console.log('animeCharRingkas: ' + JSON.stringify(animeCharRingkas));
         // response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuGambar = datos.images.webp.image_url) : (wibuAnime = 'Anime Not Found');
@@ -116,8 +118,6 @@
         // console.log("data.images.webp.image_url: " + data[0].images.webp.image_url)
         // await sleep(2000);
         isLoading = false;
-        await sleep(3000);
-
         isLoadingImage = false;
         // await sleep(5000);
       } else {
@@ -170,7 +170,6 @@
 
   $: isLoading;
   $: isLoadingImage;
-  $: animeCharRingkasJSON;
   // $: console.log('timeHorizontal: ' + timeHorizontal);
   // $: if (timeHorizontal == 1) {
   //   console.log('aktirrrrrrrrrrrrr');
@@ -180,6 +179,8 @@
   let items = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
   onMount(() => {
+    isLoading = true;
+    isLoadingImage = true;
     register();
     // isLoading = true;
     // isLoadingImage = true;
@@ -201,19 +202,32 @@
       freeMode: true
     });
     swiper.initialize();
+
+    Object.assign(swiper_recom, {
+      breakpoints: {
+        1: {
+          slidesPerView: 4
+        },
+        768: {
+          slidesPerView: 5
+        },
+        1024: {
+          slidesPerView: 7
+        }
+      },
+      freeMode: true
+    });
+    swiper_recom.initialize();
   });
 
   let previousSlug = data.slug;
 
   afterUpdate(() => {
     const currentSlug = data.slug;
-
     if (currentSlug !== previousSlug) {
       // Slug has changed
       console.log('Slug has changed:', currentSlug);
-
       printAnimePromise(data.slug);
-
       previousSlug = currentSlug; // Update the previous slug
     }
   });
@@ -258,7 +272,7 @@
         <div class="ml-9 sm:ml-6 overflow-hidden">
           <div>
             {#if anime}
-              <Ratings justify="start" value={anime.score !== null ? Math.round((anime.score / 2) * 2 + 0.4) / 2 : 0 } max={5}>
+              <Ratings justify="start" value={anime.score !== null ? Math.round((anime.score / 2) * 2 + 0.4) / 2 : 0} max={5}>
                 <svelte:fragment slot="empty"><Icon icon="solar:star-bold" color="#7D591B" width="20" /></svelte:fragment>
                 <svelte:fragment slot="half"><Icon icon="solar:star-bold-duotone" color="#ffb02e" width="20" /></svelte:fragment>
                 <svelte:fragment slot="full"><Icon icon="solar:star-bold" color="#ffb02e" width="20" /></svelte:fragment>
@@ -343,7 +357,8 @@
       <div class="lg:block hidden p-0">
         <RadioGroup active="variant-filled-primary" spacing="0" padding="px-4 py-1" hover="hover:variant-soft-primary">
           <RadioItem bind:group={timeHorizontal} name="time" value={1}>💌 Overview</RadioItem>
-          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🥙 Review</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={2}>🍣 Episodes</RadioItem>
+          <RadioItem bind:group={timeHorizontal} name="time" value={3}>🥙 Review</RadioItem>
           <!-- <RadioItem bind:group={timeHorizontal} name="time" value={3}>🍣 Overview</RadioItem> -->
         </RadioGroup>
       </div>
@@ -415,54 +430,8 @@
       </div> -->
 
         <div class="grid grid-cols-2 xl:grid-cols-4 grid-rows-1 gap-0 pt-10">
-          <div class="col-span-2 xl:col-span-4">
-            <div class="p-4">
-              <h2 class="h2">Characters</h2>
-              <article>
-                <div class="opacity-50 pb-2">List of characters that played</div>
-                <swiper-container bind:this={swiper} free-mode="true">
-                  <!-- <div class="relative flex w-[250px]"> -->
-
-                  {#each Object.keys(animeCharRingkas) as index}
-                    <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
-                    <swiper-slide>
-                      <div class="relative">
-                        <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
-                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <p class="text-sm text-gray-300">{index}</p>
-                        </div>
-                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
-                          <p class="text-sm text-gray-300">❤️‍🔥 {animeCharRingkas[index][0]}</p>
-                        </div>
-                      </div>
-
-                      {#if animeCharRingkas[index].length >= 4}
-                        <div class="relative">
-                          <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4] : animeCharRingkas[index][3]} />
-                          <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                            <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
-                          </div>
-                        </div>
-                      {/if}
-                    </swiper-slide>
-                  {/each}
-
-                  {#if animeChar}
-                    {#each animeChar as char}
-                      {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
-                    {/each}
-                  {/if}
-                </swiper-container>
-              </article>
-            </div>
-          </div>
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
-              <!-- <header>
-              {#if anime}
-                <img class="bg-black/50" src={animeChar[0].character.images.webp.image_url} alt="Post" />
-              {/if}
-            </header> -->
               <div class="p-4">
                 <h2 class="h2">Studios</h2>
                 <article class="opacity-50">
@@ -487,11 +456,6 @@
           </div>
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
-              <!-- <header>
-              {#if anime}
-                <img class="bg-black/50" src={animeChar[0].character.images.webp.image_url} alt="Post" />
-              {/if}
-            </header> -->
               <div class="p-4">
                 <h2 class="h2">Status</h2>
                 <article class="opacity-50">
@@ -506,31 +470,6 @@
           </div>
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
-              <!-- <header>
-              {#if anime}
-                <img class="bg-black/50" src={animeChar[0].character.images.webp.image_url} alt="Post" />
-              {/if}
-            </header> -->
-              <div class="p-4">
-                <h2 class="h2">Trailer</h2>
-                <article class="opacity-100">
-                  <div class="pt-1">
-                    {#if anime}
-                    <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url).replace("autoplay=1", "autoplay=0"): "https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0"} allowfullscreen></iframe>
-                    {/if}
-
-                  </div>
-                </article>
-              </div>
-            </a>
-          </div>
-          <div>
-            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
-              <!-- <header>
-              {#if anime}
-                <img class="bg-black/50" src={animeChar[0].character.images.webp.image_url} alt="Post" />
-              {/if}
-            </header> -->
               <div class="p-4">
                 <h2 class="h2">Addition</h2>
                 <article class="opacity-50">
@@ -543,37 +482,106 @@
               </div>
             </a>
           </div>
-        </div>
-        <div class=""></div>
+          <div>
+            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
+              <div class="p-4">
+                <h2 class="h2">Trailer</h2>
+                <article class="opacity-100">
+                  <div class="pt-1">
+                    {#if anime}
+                      <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url).replace('autoplay=1', 'autoplay=0') : 'https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0'} allowfullscreen></iframe>
+                    {/if}
+                  </div>
+                </article>
+              </div>
+            </a>
+          </div>
+          <div class="col-span-2 xl:col-span-4">
+            <div class="p-4">
+              <h2 class="h2">Characters</h2>
+              <article>
+                <div class="opacity-50 pb-2">List of characters that played</div>
+                <swiper-container bind:this={swiper} free-mode="true">
+                  <!-- <div class="relative flex w-[250px]"> -->
 
-        <!-- <hr class="opacity-50" /> -->
-        <!-- <footer class="p-4 flex justify-start items-center space-x-4">
-            <Avatar width="w-8" />
-            <div class="flex-auto flex justify-between items-center">
-              <h6 class="font-bold" data-toc-ignore>By Alex</h6>
-              <small>On {new Date().toLocaleDateString()}</small>
+                  {#each Object.keys(animeCharRingkas) as index}
+                    <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
+                    <swiper-slide>
+                      <div class="relative">
+                        <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
+                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                          <p class="text-sm text-gray-300">{index}</p>
+                        </div>
+                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
+                          <p class="text-sm text-gray-300">❤️‍🔥 {animeCharRingkas[index][0]}</p>
+                        </div>
+                      </div>
+
+                      {#if animeCharRingkas[index].length >= 4}
+                        <div class="relative">
+                          <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4] : animeCharRingkas[index][3]} />
+                          <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
+                            <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
+                          </div>
+                        </div>
+                      {/if}
+                    </swiper-slide>
+                  {/each}
+
+                  {#if animeChar}
+                    {#each animeChar as char}
+                      {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
+                    {/each}
+                  {/if}
+                </swiper-container>
+              </article>
             </div>
-          </footer> -->
-        <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2 pt-10">
-          <Accordion>
-            <!-- <AccordionItem hover="!bg-transparent" open>
-              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:banana" width="32px" /></svelte:fragment>
-              <svelte:fragment slot="summary"><h2 class="h2">Episodes & Relation</h2></svelte:fragment>
-              <svelte:fragment slot="content"></svelte:fragment>
-            </AccordionItem> -->
-            <AccordionItem hover="!bg-transparent" open>
-              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px" /></svelte:fragment>
-              <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
-              <svelte:fragment slot="content">
-                {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
-              </svelte:fragment>
-            </AccordionItem>
-            <AccordionItem hover="!bg-transparent" open>
-              <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beach-with-umbrella" width="32px" /></svelte:fragment>
-              <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
-              <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
-            </AccordionItem>
-          </Accordion>
+          </div>        
+          <div class="col-span-2 xl:col-span-4 pt-2">
+            <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2">
+              <Accordion>
+                <AccordionItem hover="!bg-transparent" open>
+                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px" /></svelte:fragment>
+                  <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
+                  <svelte:fragment slot="content">
+                    {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
+                  </svelte:fragment>
+                </AccordionItem>
+                <AccordionItem hover="!bg-transparent" open>
+                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beach-with-umbrella" width="32px" /></svelte:fragment>
+                  <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
+                  <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </div>
+          <div class="col-span-2 xl:col-span-4">
+            <div class="p-4">
+              <h2 class="h2">Look 'a Like</h2>
+              <article>
+                <div class="opacity-50 pb-2">List of anime that lookalike</div>
+                <swiper-container bind:this={swiper_recom} free-mode="true">
+                  {#if animeRecom}
+                    {#each animeRecom as recom}
+                      <swiper-slide>
+                        <a href="/weeb/{recom.entry.mal_id}">
+                        <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">
+                          <img alt={recom.entry.title} class="object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
+                          <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60">
+                            <p class="text-sm text-gray-300 m-0">{recom.entry.title}</p>
+                          </div>
+                          <div class="absolute text-center top-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-t-md">
+                            <p class="text-sm text-gray-300 ">❤️‍🔥 {recom.votes}</p>
+                          </div>
+                        </div>
+                      </a>
+                      </swiper-slide>
+                    {/each}
+                  {/if}
+                </swiper-container>
+              </article>
+            </div>
+          </div>
         </div>
       </div>
       <div class="spacer h-[100px]"></div>

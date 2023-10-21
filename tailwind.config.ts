@@ -10,11 +10,6 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}', join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')],
 	theme: {
 		extend: {
-			hide: {
-				'#logo': {
-				  display: 'none',
-				},
-			  },
 			animation: {
 				'spin-slow': 'spin 10s linear infinite',
 				'spin-slowly': 'spin 60s linear infinite',
@@ -22,9 +17,6 @@ export default {
 				'unblur-05': 'unblur 0.5s',
 			  },
 			  keyframes: {
-				mbuhopo: {
-					'transform' : 'translateZ(0.0001px) rotateY(-14.1176470588deg)'
-				},
 				wiggle: {
 				  '0%, 100%': { transform: 'rotate(-6deg)' },
 				  '50%': { transform: 'rotate(6deg)' },
