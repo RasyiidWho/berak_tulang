@@ -505,7 +505,7 @@
                   <!-- <div class="relative flex w-[250px]"> -->
 
                   {#each Object.keys(animeCharRingkas) as index}
-                    <!-- <h1 class="h1">length: {animeCharRingkas[index].length}</h1> -->
+                    {#if !animeCharRingkas[index][1].includes('questionmark')}
                     <swiper-slide>
                       <div class="relative">
                         <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
@@ -526,6 +526,7 @@
                         </div>
                       {/if}
                     </swiper-slide>
+                    {/if}
                   {/each}
 
                   {#if animeChar}
