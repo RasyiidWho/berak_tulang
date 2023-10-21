@@ -383,21 +383,21 @@
           <h1 class="h1 absolute opacity-10 pl-5 lg:-mt-3 overflow-hidden">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
         </div>
         <div style="font-size: 0;" class="pt-2 pl-5 pr-5 block flex-wrap overflow-x-hidden box-content">
-          <!-- <a target="_blank" href="https://myanimelist.net/anime/{data.slug}" class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">MAL</a> -->
+          <!-- <a target="_blank" href="https://myanimelist.net/anime/{data.slug}" class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">MAL</a> -->
           {#if anime}
             {#if anime.studios[1]}
               {#each anime.studios as studio}
-                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{'📹 ' + studio.name}</span>
+                <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">{'📹 ' + studio.name}</span>
                 {studio.name},
               {/each}
             {:else}
               {#each anime.studios as studio}
-                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{'📹 ' + studio.name}</span>
+                <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">{'📹 ' + studio.name}</span>
                 {studio.name}
               {/each}
             {/if}
             <!-- <span class="chip variant-soft-primary mr-1 my-0 text-sm animate-pulse text-yellow-100 mb-1">📀 Airing in 3 hour, 26 mins!</span> -->
-            <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">
+            <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">
               {#if anime}
                 {#if anime.season == 'fall'}
                   🍂 Fall {anime.year}
@@ -413,25 +413,25 @@
               {/if}
             </span>
             {#each anime.genres as genre}
-              <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1"> {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}</span>
+              <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1"> {genre.name === 'Award Winning' ? '🏆 ' + genre.name : genre.name}</span>
             {/each}
           {/if}
           {#if anime}
             {#if anime.demographics === 'object' || anime.demographics[0]}
               {#each anime.demographics as demographic}
-                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{demographic.name}</span>
+                <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">{demographic.name}</span>
               {/each}
             {/if}
           {/if}
           {#if anime}
             {#if anime.themes === 'object' || anime.themes[0]}
               {#each anime.themes as theme}
-                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{theme.name}</span>
+                <span class="chip variant-soft-primary mr-1 my-0 text-xs md:text-xs xl:text-sm mb-1">{theme.name}</span>
               {/each}
             {/if}
           {/if}
         </div>
-        <div class="relative opacity-10 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
+        <div class="relative opacity-30 ml-5 -m-8 pt-8 w-full h-full -z-40 overflow-hidden">
           {#if anime}
             <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.rank ? anime?.rank : '....'} Rank,</h2>
             <h2 class="chip m-0 p-0 lg:text-4xl text-xl">#{anime?.popularity ? anime?.popularity : '....'} Popular,</h2>
