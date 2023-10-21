@@ -400,13 +400,13 @@
             <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">
               {#if anime}
                 {#if anime.season == 'fall'}
-                  🍂 Fall
+                  🍂 Fall {anime.year}
                 {:else if anime.season == 'winter'}
-                  ⛄ Winter
+                  ⛄ Winter {anime.year}
                 {:else if anime.season == 'spring'}
-                  🌱 Spring
+                  🌱 Spring {anime.year}
                 {:else if anime.season == 'summer'}
-                  ☀️ Summer
+                  ☀️ Summer {anime.year}
                 {:else}
                   😭 No Season Recorded
                 {/if}
@@ -449,16 +449,23 @@
 
         <div class="grid grid-cols-2 xl:grid-cols-4 grid-rows-1 gap-0 pt-10">
           <div>
-            <div class="!bg-transparent !border-0 card-hover hover:shadow-none overflow-hidden">
+            <div class="!bg-transparent !border-0 card-hover transition-transform hover:shadow-none overflow-hidden">
               <div class="p-4">
                 <div class="flex items-center">
                   <Icon icon="fluent-emoji:bubbles" width="32px" class="mr-4" />
                   <h2 class="h2">Status</h2>
                 </div>
-                <article class="opacity-60">
+                <article class="opacity-60 mt-1">
                   {#if anime}
-                    <p class="animate-pulse flex">🟢 {anime?.status ? anime.status : 'Not Identified'}</p>
-                    <p>{anime.aired.string}</p>
+                    {#if anime.status === 'Finished Airing'}
+                      <p class="flex">🟣 {anime?.status ? anime.status : 'Not Identified'}</p>
+                    {:else if anime.status === 'Currently Airing'}
+                      <p class="animate-pulse flex">🟢 {anime?.status ? anime.status : 'Not Identified'}</p>
+                    {:else}
+                      <p class="animate-pulse flex">{anime?.status ? anime.status : 'Not Identified'}</p>
+                    {/if}
+
+                    <p class="pl-8">{anime.aired.string}</p>
                     <!-- <p>Start: {anime.aired.from !== null ? String(anime.aired.from).replace('T00:00:00+00:00', '') : '....'}</p>
                     <p>End: {anime.aired.to !== null ? String(anime.aired.to).replace('T00:00:00+00:00', '') : '....'}</p> -->
                   {/if}
@@ -473,7 +480,7 @@
                   <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4" />
                   <h2 class="h2">Addition</h2>
                 </div>
-                <article class="opacity-60">
+                <article class="opacity-60 mt-1">
                   {#if anime}
                     <p>Type: {anime?.type ? anime.type : '....'}</p>
                     <p>Source: {anime?.source ? anime.source : '....'}</p>
@@ -490,7 +497,7 @@
                   <Icon icon="fluent-emoji:books" width="32px" class="mr-4" />
                   <h2 class="h2">Alias</h2>
                 </div>
-                <article class="opacity-60">
+                <article class="opacity-60 mt-1">
                   <p>
                     {#if anime}
                       {#if anime.title[0]}
@@ -513,7 +520,7 @@
                   <Icon icon="fluent-emoji:videocassette" width="32px" class="mr-4" />
                   <h2 class="h2">Trailer</h2>
                 </div>
-                <article class="opacity-100">
+                <article class="opacity-100 mt-1">
                   <div class="pt-1.5">
                     {#if anime}
                       <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url).replace('autoplay=1', 'autoplay=0') : 'https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0'} allowfullscreen></iframe>
@@ -604,7 +611,7 @@
                 <div class="opacity-60 pb-2">List of anime that lookalike</div>
                 <swiper-container bind:this={swiper_recom} free-mode="true">
                   {#if animeRecom}
-                    {#each animeRecom.slice(0, 8) as recom}
+                    {#each animeRecom.slice(0, 12) as recom}
                       <swiper-slide>
                         <a href="/weeb/{recom.entry.mal_id}">
                           <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">

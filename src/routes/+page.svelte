@@ -16,8 +16,8 @@
     // myElement.addEventListener('click', handleClick);
     if (browser) {
       // start the application and load the scene
-  const spline = new Application(canvas3d);
-  spline.load('https://prod.spline.design/TRY4GvgtSIVQYCAA/scene.splinecode');
+  // const spline = new Application(canvas3d);
+  // spline.load('https://prod.spline.design/TRY4GvgtSIVQYCAA/scene.splinecode');
 
   }
   });

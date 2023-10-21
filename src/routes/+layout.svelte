@@ -324,7 +324,7 @@ function handleKeyO(event){
 
 <div class="{isScrollUp ? '' : 'translate-y-full '} z-50 transition duration-500 ease-in-out fixed bottom-0 left-1/2 transform -translate-x-1/2 p-2 m-0">
   <RadioGroup>
-    <RadioItem active="" name="justify"><button class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:house" width="30" /></button></RadioItem>
+    <RadioItem active="" name="justify"><a href="/" class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:house" width="30" /></a></RadioItem>
     <RadioItem active="" name="justify" on:click={() => triggerModal()}><button on:click={() => triggerModal()} class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:magnifying-glass-tilted-left" width="30" /></button></RadioItem>
     <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="fluent-emoji:page-with-curl" width="30" /></button></RadioItem>
     <RadioItem active="" name="justify"><button class="btn m-0 p-0 bottom-0 pt-1"><Icon icon="fluent-emoji:heart-on-fire" width="30" /></button></RadioItem>
