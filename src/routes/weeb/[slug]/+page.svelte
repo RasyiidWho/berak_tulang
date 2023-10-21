@@ -14,6 +14,7 @@
   import { browser } from '$app/environment';
   import { debounce, throttle } from 'lodash-es';
   import { timeout } from '$lib/timeout.js';
+  import { trimText } from '$lib/trim.js';
 
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -115,18 +116,13 @@
         });
         // Convert animeCharRingkas to an array of objects for sorting
         const animeCharArray = Object.keys(animeCharRingkas).map((key, index) => {
-          const item = { char: key,
-          fav: animeCharRingkas[key][0],
-          charJPEG: animeCharRingkas[key][1],
-          va: animeCharRingkas[key][2],
-          vaJPEG: (animeCharRingkas[key][4] ? animeCharRingkas[key][4] : animeCharRingkas[key][3])
-          }
+          const item = { char: key, fav: animeCharRingkas[key][0], charJPEG: animeCharRingkas[key][1], va: animeCharRingkas[key][2], vaJPEG: animeCharRingkas[key][4] ? animeCharRingkas[key][4] : animeCharRingkas[key][3] };
           return item;
         });
-        
 
         // Sort animeCharArray by 'favorites'
         animeCharRingkasJSON = animeCharArray.sort((a, b) => b.fav - a.fav);
+        console.log('typeof animeRecom: ' + typeof animeRecom);
 
         console.log('animeCharRingkasJSON: ' + JSON.stringify(animeCharRingkasJSON));
         // response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
@@ -208,7 +204,7 @@
     Object.assign(swiper, {
       breakpoints: {
         1: {
-          slidesPerView: 4
+          slidesPerView: 3
         },
         768: {
           slidesPerView: 5
@@ -224,7 +220,7 @@
     Object.assign(swiper_recom, {
       breakpoints: {
         1: {
-          slidesPerView: 4
+          slidesPerView: 3
         },
         768: {
           slidesPerView: 5
@@ -326,7 +322,7 @@
           <img
             alt="cover"
             bind:this={isLoadingImageHTML}
-            class="lazyload md:w-[360px] xl:min-w-[300px] 2xl:min-w-[500px] rounded-md
+            class="lazyload md:w-[360px] xl:min-w-[300px] 2xl:min-w-[450px] rounded-md
               {isLoadingImage ? 'animate-pulse blurx-xl' : ''} 
               {anime?.images.webp.image_url ? anime?.images.webp.image_url : berak}"
             src={anime?.images.webp.image_url}
@@ -387,14 +383,18 @@
           <h1 class="h1 absolute opacity-10 pl-5 lg:-mt-3 overflow-hidden">{anime?.title ? anime.title_japanese : 'タイトル'}</h1>
         </div>
         <div style="font-size: 0;" class="pt-2 pl-5 pr-5 block flex-wrap overflow-x-hidden box-content">
-          <a target="_blank" href="https://myanimelist.net/anime/{data.slug}" class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">MAL</a>
+          <!-- <a target="_blank" href="https://myanimelist.net/anime/{data.slug}" class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">MAL</a> -->
           {#if anime}
-            {#if anime.studios === 'object'}
+            {#if anime.studios[1]}
               {#each anime.studios as studio}
-                <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
+                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{'📹 ' + studio.name}</span>
+                {studio.name},
               {/each}
             {:else}
-              <!-- <span class="chip variant-soft-primary mr-1 my-0">{anime.studios[0]?.name ? '📹 ' + anime.studios[0].name : '📹 '}</span> -->
+              {#each anime.studios as studio}
+                <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">{'📹 ' + studio.name}</span>
+                {studio.name}
+              {/each}
             {/if}
             <!-- <span class="chip variant-soft-primary mr-1 my-0 text-sm animate-pulse text-yellow-100 mb-1">📀 Airing in 3 hour, 26 mins!</span> -->
             <span class="chip variant-soft-primary mr-1 my-0 text-sm mb-1">
@@ -449,51 +449,25 @@
 
         <div class="grid grid-cols-2 xl:grid-cols-4 grid-rows-1 gap-0 pt-10">
           <div>
-            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
+            <div class="!bg-transparent !border-0 card-hover hover:shadow-none overflow-hidden">
               <div class="p-4">
                 <div class="flex items-center">
-                  <Icon icon="fluent-emoji:movie-camera" width="32px" class="mr-4" />
-                  <h2 class="h2">Studio</h2>
-                </div>
-                <article class="opacity-60">
-                  <p>
-                    {#if anime}
-                      {#if anime.studios[1]}
-                        {#each anime.studios as studio}
-                          <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
-                          {studio.name},
-                        {/each}
-                      {:else}
-                        {#each anime.studios as studio}
-                          <!-- <span class="chip variant-soft-primary mr-1 my-0">{'📹 ' + studio.name}</span> -->
-                          {studio.name}
-                        {/each}
-                      {/if}
-                    {/if}
-                  </p>
-                </article>
-              </div>
-            </a>
-          </div>
-          <div>
-            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
-              <div class="p-4">
-                <div class="flex items-center">
-                  <Icon icon="fluent-emoji:green-circle" width="32px" class="mr-4" />
+                  <Icon icon="fluent-emoji:bubbles" width="32px" class="mr-4" />
                   <h2 class="h2">Status</h2>
                 </div>
                 <article class="opacity-60">
                   {#if anime}
-                    <p>{anime?.status ? anime.status : 'Not Identified'}</p>
-                    <p>Start: {anime.aired.from !== null ? String(anime.aired.from).replace('T00:00:00+00:00', '') : '....'}</p>
-                    <p>End: {anime.aired.to !== null ? String(anime.aired.to).replace('T00:00:00+00:00', '') : '....'}</p>
+                    <p class="animate-pulse flex">🟢 {anime?.status ? anime.status : 'Not Identified'}</p>
+                    <p>{anime.aired.string}</p>
+                    <!-- <p>Start: {anime.aired.from !== null ? String(anime.aired.from).replace('T00:00:00+00:00', '') : '....'}</p>
+                    <p>End: {anime.aired.to !== null ? String(anime.aired.to).replace('T00:00:00+00:00', '') : '....'}</p> -->
                   {/if}
                 </article>
               </div>
-            </a>
+            </div>
           </div>
           <div>
-            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
+            <div class="!bg-transparent !border-0 card-hover hover:shadow-none overflow-hidden">
               <div class="p-4">
                 <div class="flex items-center">
                   <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4" />
@@ -507,10 +481,33 @@
                   {/if}
                 </article>
               </div>
-            </a>
+            </div>
           </div>
           <div>
-            <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
+            <div class="!bg-transparent !border-0 card-hover hover:shadow-none overflow-hidden">
+              <div class="p-4">
+                <div class="flex items-center">
+                  <Icon icon="fluent-emoji:books" width="32px" class="mr-4" />
+                  <h2 class="h2">Alias</h2>
+                </div>
+                <article class="opacity-60">
+                  <p>
+                    {#if anime}
+                      {#if anime.title[0]}
+                        {#each anime.titles.slice(0, 6) as title}
+                          {#if title.type === 'Synonym'}
+                            {title.title}<br />
+                          {/if}
+                        {/each}
+                      {:else}{/if}
+                    {/if}
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="!bg-transparent !border-0 card-hover hover:shadow-none overflow-hidden">
               <div class="p-4">
                 <div class="flex items-center">
                   <Icon icon="fluent-emoji:videocassette" width="32px" class="mr-4" />
@@ -524,7 +521,7 @@
                   </div>
                 </article>
               </div>
-            </a>
+            </div>
           </div>
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4 pt-0">
@@ -534,39 +531,42 @@
               </div>
               <article>
                 <div class="opacity-60 pb-2">List of characters that played with VA</div>
-                <swiper-container bind:this={swiper} free-mode="true">
-                  <!-- <div class="relative flex w-[250px]"> -->
-                  {#if animeCharRingkasJSON}
-                    {#each animeCharRingkasJSON as char}
-                      {#if !char.charJPEG.includes('questionmark')}
-                      <swiper-slide>
-                        <div class="relative">
-                          <img alt={char.char} class="object-cover rounded-t-lg px-0.5" src={char.charJPEG} />
-                          <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                            <p class="text-sm text-white opacity-100">{char.char}</p>
-                          </div>
-                          <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
-                            <p class="text-sm text-white opacity-100">❤️‍🔥 {char.fav}</p>
-                          </div>
-                        </div>
-
-
-                          <div class="relative">
-                            <img alt={char.va} class="object-cover rounded-b-lg px-0.5" src={char.vaJPEG} />
-                            <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
-                              <p class="text-sm text-white opacity-100">{char.va}</p>
+                <div class="cursor-grab active:cursor-grabbing">
+                  <swiper-container bind:this={swiper} free-mode="true">
+                    <!-- <div class="relative flex w-[250px]"> -->
+                    {#if animeCharRingkasJSON}
+                      {#each animeCharRingkasJSON as char}
+                        {#if !char.charJPEG.includes('questionmark')}
+                          <swiper-slide>
+                            <div class="relative">
+                              <img alt={char.char} class="object-cover rounded-t-lg px-0.5" src={char.charJPEG} />
+                              <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                                <p class="text-sm text-white opacity-100">{char.char}</p>
+                              </div>
+                              <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
+                                <p class="text-sm text-white opacity-100">❤️‍🔥 {char.fav}</p>
+                              </div>
                             </div>
-                          </div>
-                      </swiper-slide>
-                      {/if}
-                    {/each}
-                  {/if}
-                  {#if animeChar}
-                    {#each animeChar as char}
-                      {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
-                    {/each}
-                  {/if}
-                </swiper-container>
+
+                            {#if char.va !== undefined}
+                              <div class="relative">
+                                <img alt={char.va} class="object-cover rounded-b-lg px-0.5" src={char.vaJPEG} />
+                                <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
+                                  <p class="text-sm text-white opacity-100">{char.va}</p>
+                                </div>
+                              </div>
+                            {/if}
+                          </swiper-slide>
+                        {/if}
+                      {/each}
+                    {/if}
+                    {#if animeChar}
+                      {#each animeChar as char}
+                        {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
+                      {/each}
+                    {/if}
+                  </swiper-container>
+                </div>
               </article>
             </div>
           </div>
@@ -578,7 +578,7 @@
                   <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
                   <svelte:fragment slot="content">
                     <div class="opacity-60">
-                      {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
+                      {anime?.synopsis ? anime?.synopsis : 'Synopsys not Found.'}
                     </div>
                   </svelte:fragment>
                 </AccordionItem>
@@ -587,7 +587,7 @@
                   <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
                   <svelte:fragment slot="content">
                     <div class="opacity-60">
-                      {anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}
+                      {anime?.background ? anime?.background : 'Background not found.'}
                     </div>
                   </svelte:fragment>
                 </AccordionItem>
@@ -604,13 +604,13 @@
                 <div class="opacity-60 pb-2">List of anime that lookalike</div>
                 <swiper-container bind:this={swiper_recom} free-mode="true">
                   {#if animeRecom}
-                    {#each animeRecom as recom}
+                    {#each animeRecom.slice(0, 8) as recom}
                       <swiper-slide>
                         <a href="/weeb/{recom.entry.mal_id}">
                           <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">
                             <img alt={recom.entry.title} class=" object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
                             <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-b-md">
-                              <p class="text-sm text-white opacity-100 m-0">{recom.entry.title}</p>
+                              <p class="text-sm text-white opacity-100 m-0">{trimText(recom.entry.title, 20)}</p>
                             </div>
                             <div class="absolute text-center top-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-t-md">
                               <p class="text-sm text-white opacity-100">❤️‍🔥 {recom.votes}</p>

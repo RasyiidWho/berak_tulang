@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { trimText } from "$lib/trim.js";
   import '../app.postcss';
   import '$lib/assets/global.css';
   import { initializeStores, focusTrap } from "@skeletonlabs/skeleton";
@@ -256,7 +257,7 @@ function handleKeyO(event){
                 <h6 class="h6 flex-auto text-left w-60 md:w-[24rem] md:w-96 truncate"><span class="chip variant-soft-primary rounded-full px-[4px] py-[1px] ">Anime</span> {data.genres.find((genre) => genre.name === 'Award Winning') ? '🏆 ' : ''}{data.titles[0].title}</h6>
                 <span class="chip variant-soft-primaryry px-[4px] py-[1px]">⭐ {data.score ? data.score : '....'} </span>
                 <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🗓️ {data.aired.prop.from.year ? data.aired.prop.from.year : '....'} </span>
-                <span class="chip variant-soft-primaryry px-[4px] py-[1px]">🧬 {data.genres[0]?.name ? data.genres[0].name : '....'}</span>
+                <span class="chip variant-soft-primaryry px-[4px] py-[1px] truncate">🧬 {data.genres[0]?.name ? trimText(data.genres[0].name, 9) : '....'}</span>
                 <!-- <span class="chip variant-filled-secondary">Anime</span>
                 <span class="chip variant-filled-secondary">Anime</span> -->
               </div>
@@ -321,7 +322,7 @@ function handleKeyO(event){
 
 <slot><!-- optional fallback --></slot>
 
-<div class="{isScrollUp ? '' : 'translate-y-full '} transition duration-500 ease-in-out fixed bottom-0 left-1/2 transform -translate-x-1/2 p-2 m-0">
+<div class="{isScrollUp ? '' : 'translate-y-full '} z-50 transition duration-500 ease-in-out fixed bottom-0 left-1/2 transform -translate-x-1/2 p-2 m-0">
   <RadioGroup>
     <RadioItem active="" name="justify"><button class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:house" width="30" /></button></RadioItem>
     <RadioItem active="" name="justify" on:click={() => triggerModal()}><button on:click={() => triggerModal()} class="btn m-0 p-0 pt-1"><Icon icon="fluent-emoji:magnifying-glass-tilted-left" width="30" /></button></RadioItem>
