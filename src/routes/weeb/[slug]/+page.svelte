@@ -13,8 +13,8 @@
   import { register } from 'swiper/element/bundle';
   import { browser } from '$app/environment';
   import { debounce, throttle } from 'lodash-es';
-    import { timeout } from '$lib/timeout.js';
-  
+  import { timeout } from '$lib/timeout.js';
+
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
   let isLoading = false;
@@ -76,6 +76,7 @@
   let anime;
   let animeChar;
   let animeCharRingkas = {};
+  let animeCharRingkasJSON;
   let animeRecom;
 
   async function printAnimePromise(id) {
@@ -87,19 +88,14 @@
     // animeData.set(0);
     // await sleep(5000);
     try {
-      const fetchPromises = [
-      fetch('https://api.jikan.moe/v4/anime/' + id + '/full'),
-      new Promise(resolve => setTimeout(resolve, 1000)),
-      fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'),
-      new Promise(resolve => setTimeout(resolve, 1000)),
-      fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations'),
-    ];
+      const fetchPromises = [fetch('https://api.jikan.moe/v4/anime/' + id + '/full'), new Promise((resolve) => setTimeout(resolve, 1000)), fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'), new Promise((resolve) => setTimeout(resolve, 1000)), fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations')];
       // const fullPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
       // const charactersPromise = new Promise((resolve) => sleep(500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
       // const recommendationsPromise = new Promise((resolve) => sleep(500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations'));
       const [full, _, characters, __, recommendations] = await Promise.all(fetchPromises);
       if (full.ok && characters.ok && recommendations.ok) {
         animeCharRingkas = {};
+        animeCharRingkasJSON = null;
         const data = await full.json();
         const dataChar = await characters.json();
         const dataRecom = await recommendations.json();
@@ -108,16 +104,31 @@
         animeRecom = dataRecom.data;
         animeChar.forEach((data) => {
           const fav = data.favorites;
-          const imageJPEG = data.character.images.jpg.image_url;
+          const charJPEG = data.character.images.jpg.image_url;
           const va = data.voice_actors.filter((actor) => actor.language === 'Japanese').map((actor) => actor.person.name);
           const vaJPEG = data.voice_actors.filter((actor) => actor.language === 'Japanese').map((actor) => actor.person.images.jpg.image_url);
 
-          data.japaneseVoiceActors = Array.from(new Set([fav, imageJPEG, ...va, ...vaJPEG]));
+          data.japaneseVoiceActors = Array.from(new Set([fav, charJPEG, ...va, ...vaJPEG]));
 
           // Collect unique Japanese voice actors in animeCharRingkas
           animeCharRingkas[data.character.name] = data.japaneseVoiceActors;
         });
-        console.log('animeCharRingkas: ' + JSON.stringify(animeCharRingkas));
+        // Convert animeCharRingkas to an array of objects for sorting
+        const animeCharArray = Object.keys(animeCharRingkas).map((key, index) => {
+          const item = { char: key,
+          fav: animeCharRingkas[key][0],
+          charJPEG: animeCharRingkas[key][1],
+          va: animeCharRingkas[key][2],
+          vaJPEG: (animeCharRingkas[key][4] ? animeCharRingkas[key][4] : animeCharRingkas[key][3])
+          }
+          return item;
+        });
+        
+
+        // Sort animeCharArray by 'favorites'
+        animeCharRingkasJSON = animeCharArray.sort((a, b) => b.fav - a.fav);
+
+        console.log('animeCharRingkasJSON: ' + JSON.stringify(animeCharRingkasJSON));
         // response ? (wibuAnime = datos.titles[0].title) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuGambar = datos.images.webp.image_url) : (wibuAnime = 'Anime Not Found');
         // response ? (wibuRating = datos.score) : (wibuRating = 10);
@@ -441,7 +452,7 @@
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
                 <div class="flex items-center">
-                  <Icon icon="fluent-emoji:movie-camera" width="32px" class="mr-4"/>
+                  <Icon icon="fluent-emoji:movie-camera" width="32px" class="mr-4" />
                   <h2 class="h2">Studio</h2>
                 </div>
                 <article class="opacity-60">
@@ -468,7 +479,7 @@
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
                 <div class="flex items-center">
-                  <Icon icon="fluent-emoji:green-circle" width="32px" class="mr-4"/>
+                  <Icon icon="fluent-emoji:green-circle" width="32px" class="mr-4" />
                   <h2 class="h2">Status</h2>
                 </div>
                 <article class="opacity-60">
@@ -485,7 +496,7 @@
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
                 <div class="flex items-center">
-                  <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4"/>
+                  <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4" />
                   <h2 class="h2">Addition</h2>
                 </div>
                 <article class="opacity-60">
@@ -502,7 +513,7 @@
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
                 <div class="flex items-center">
-                  <Icon icon="fluent-emoji:videocassette" width="32px" class="mr-4"/>
+                  <Icon icon="fluent-emoji:videocassette" width="32px" class="mr-4" />
                   <h2 class="h2">Trailer</h2>
                 </div>
                 <article class="opacity-100">
@@ -518,39 +529,38 @@
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4 pt-0">
               <div class="flex items-center">
-                <Icon icon="fluent-emoji:goblin" width="32px" class="mr-4"/>
+                <Icon icon="fluent-emoji:goblin" width="32px" class="mr-4" />
                 <h2 class="h2">Characters</h2>
               </div>
               <article>
-                <div class="opacity-60 pb-2">List of characters that played</div>
+                <div class="opacity-60 pb-2">List of characters that played with VA</div>
                 <swiper-container bind:this={swiper} free-mode="true">
                   <!-- <div class="relative flex w-[250px]"> -->
-
-                  {#each Object.keys(animeCharRingkas) as index}
-                    {#if !animeCharRingkas[index][1].includes('questionmark')}
-                    <swiper-slide>
-                      <div class="relative">
-                        <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
-                        <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <p class="text-sm text-white opacity-100">{index}</p>
-                        </div>
-                        <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
-                          <p class="text-sm text-white opacity-100">❤️‍🔥 {animeCharRingkas[index][0]}</p>
-                        </div>
-                      </div>
-
-                      {#if animeCharRingkas[index].length >= 4}
+                  {#if animeCharRingkasJSON}
+                    {#each animeCharRingkasJSON as char}
+                      {#if !char.charJPEG.includes('questionmark')}
+                      <swiper-slide>
                         <div class="relative">
-                          <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4] : animeCharRingkas[index][3]} />
-                          <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
-                            <p class="text-sm text-white opacity-100">{animeCharRingkas[index][2]}</p>
+                          <img alt={char.char} class="object-cover rounded-t-lg px-0.5" src={char.charJPEG} />
+                          <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
+                            <p class="text-sm text-white opacity-100">{char.char}</p>
+                          </div>
+                          <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
+                            <p class="text-sm text-white opacity-100">❤️‍🔥 {char.fav}</p>
                           </div>
                         </div>
-                      {/if}
-                    </swiper-slide>
-                    {/if}
-                  {/each}
 
+
+                          <div class="relative">
+                            <img alt={char.va} class="object-cover rounded-b-lg px-0.5" src={char.vaJPEG} />
+                            <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
+                              <p class="text-sm text-white opacity-100">{char.va}</p>
+                            </div>
+                          </div>
+                      </swiper-slide>
+                      {/if}
+                    {/each}
+                  {/if}
                   {#if animeChar}
                     {#each animeChar as char}
                       {#if !char.character.images.webp.image_url.includes('questionmark')}{/if}
@@ -559,7 +569,7 @@
                 </swiper-container>
               </article>
             </div>
-          </div>        
+          </div>
           <div class="col-span-2 xl:col-span-4 pt-2">
             <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2">
               <Accordion>
@@ -568,8 +578,8 @@
                   <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
                   <svelte:fragment slot="content">
                     <div class="opacity-60">
-                    {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
-                  </div>
+                      {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
+                    </div>
                   </svelte:fragment>
                 </AccordionItem>
                 <AccordionItem hover="!bg-transparent" open>
@@ -577,8 +587,8 @@
                   <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
                   <svelte:fragment slot="content">
                     <div class="opacity-60">
-                    {anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}
-                  </div>
+                      {anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}
+                    </div>
                   </svelte:fragment>
                 </AccordionItem>
               </Accordion>
@@ -587,7 +597,7 @@
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4">
               <div class="flex items-center">
-                <Icon icon="fluent-emoji:beans" width="32px" class="mr-4"/>
+                <Icon icon="fluent-emoji:beans" width="32px" class="mr-4" />
                 <h2 class="h2">Look a' Like</h2>
               </div>
               <article>
@@ -597,16 +607,16 @@
                     {#each animeRecom as recom}
                       <swiper-slide>
                         <a href="/weeb/{recom.entry.mal_id}">
-                        <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">
-                          <img alt={recom.entry.title} class=" object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
-                          <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-b-md">
-                            <p class="text-sm text-white opacity-100 m-0">{recom.entry.title}</p>
+                          <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">
+                            <img alt={recom.entry.title} class=" object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
+                            <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-b-md">
+                              <p class="text-sm text-white opacity-100 m-0">{recom.entry.title}</p>
+                            </div>
+                            <div class="absolute text-center top-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-t-md">
+                              <p class="text-sm text-white opacity-100">❤️‍🔥 {recom.votes}</p>
+                            </div>
                           </div>
-                          <div class="absolute text-center top-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-t-md">
-                            <p class="text-sm text-white opacity-100 ">❤️‍🔥 {recom.votes}</p>
-                          </div>
-                        </div>
-                      </a>
+                        </a>
                       </swiper-slide>
                     {/each}
                   {/if}
