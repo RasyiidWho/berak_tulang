@@ -444,7 +444,7 @@
                   <Icon icon="fluent-emoji:movie-camera" width="32px" class="mr-4"/>
                   <h2 class="h2">Studio</h2>
                 </div>
-                <article class="opacity-50">
+                <article class="opacity-60">
                   <p>
                     {#if anime}
                       {#if anime.studios[1]}
@@ -471,7 +471,7 @@
                   <Icon icon="fluent-emoji:green-circle" width="32px" class="mr-4"/>
                   <h2 class="h2">Status</h2>
                 </div>
-                <article class="opacity-50">
+                <article class="opacity-60">
                   {#if anime}
                     <p>{anime?.status ? anime.status : 'Not Identified'}</p>
                     <p>Start: {anime.aired.from !== null ? String(anime.aired.from).replace('T00:00:00+00:00', '') : '....'}</p>
@@ -488,7 +488,7 @@
                   <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4"/>
                   <h2 class="h2">Addition</h2>
                 </div>
-                <article class="opacity-50">
+                <article class="opacity-60">
                   {#if anime}
                     <p>Type: {anime?.type ? anime.type : '....'}</p>
                     <p>Source: {anime?.source ? anime.source : '....'}</p>
@@ -516,13 +516,13 @@
             </a>
           </div>
           <div class="col-span-2 xl:col-span-4">
-            <div class="p-4">
+            <div class="p-4 pt-0">
               <div class="flex items-center">
                 <Icon icon="fluent-emoji:goblin" width="32px" class="mr-4"/>
                 <h2 class="h2">Characters</h2>
               </div>
               <article>
-                <div class="opacity-50 pb-2">List of characters that played</div>
+                <div class="opacity-60 pb-2">List of characters that played</div>
                 <swiper-container bind:this={swiper} free-mode="true">
                   <!-- <div class="relative flex w-[250px]"> -->
 
@@ -567,13 +567,19 @@
                   <svelte:fragment slot="lead"><Icon icon="fluent-emoji:open-book" width="32px" /></svelte:fragment>
                   <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
                   <svelte:fragment slot="content">
+                    <div class="opacity-60">
                     {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
+                  </div>
                   </svelte:fragment>
                 </AccordionItem>
                 <AccordionItem hover="!bg-transparent" open>
                   <svelte:fragment slot="lead"><Icon icon="fluent-emoji:clapper-board" width="32px" /></svelte:fragment>
                   <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
-                  <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
+                  <svelte:fragment slot="content">
+                    <div class="opacity-60">
+                    {anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}
+                  </div>
+                  </svelte:fragment>
                 </AccordionItem>
               </Accordion>
             </div>
@@ -585,7 +591,7 @@
                 <h2 class="h2">Look a' Like</h2>
               </div>
               <article>
-                <div class="opacity-50 pb-2">List of anime that lookalike</div>
+                <div class="opacity-60 pb-2">List of anime that lookalike</div>
                 <swiper-container bind:this={swiper_recom} free-mode="true">
                   {#if animeRecom}
                     {#each animeRecom as recom}
