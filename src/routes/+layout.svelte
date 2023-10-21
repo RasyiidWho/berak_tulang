@@ -191,7 +191,7 @@ const handleKeyDown = debounce(event => {
     // Execute your command here
     triggerModal();
   }
-}, 1000)
+}, 500)
 
 function handleKeyO(event){
   // animeNameSedurunge = animeName;
@@ -231,7 +231,7 @@ function handleKeyO(event){
   <div class="fixed left-1/2 transform -translate-x-1/2 z-[1000] p-25 opacity-0 transition-opacity ease-in-out duration-300" class:opacity-100={isVisible}>
     <section class="w-[350px] md:w-[500px] xl:w-[520px] mt-20 md:mt-30 xl:mt-40 text-token  card border-none border-0 ">
       <form use:focusTrap={isFocused}>
-        <input class="input rounded-lg w-[350px] md:w-[500px] xl:w-[520px]" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
+        <input class="input rounded-lg w-[350px] md:w-[500px] xl:w-[520px] text-sm md:text-base xl:text-base" style="text-decoration: none !important;" spellcheck="false" placeholder="Anime or Kdrama you want to lookup..." bind:value={animeName} on:input={handleKeyDown} />
       </form>
       <ul class="list border-none">
         <!-- {JSON.stringify($animeData)} -->

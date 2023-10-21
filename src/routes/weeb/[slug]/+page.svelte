@@ -12,7 +12,8 @@
   import { trimTextAfterWord } from '$lib/trim.js';
   import { register } from 'swiper/element/bundle';
   import { browser } from '$app/environment';
-  import { debounce } from '$lib/debounce.js';
+  import { debounce, throttle } from 'lodash-es';
+    import { timeout } from '$lib/timeout.js';
   
   const modalStore = getModalStore();
   let arrayAlasanBerak = [];
@@ -86,12 +87,18 @@
     // animeData.set(0);
     // await sleep(5000);
     try {
-      const fullPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
-      const charactersPromise = new Promise((resolve) => debounce(resolve, 1500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
-      const recommendationsPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations');
-      const [full, characters, recommendations] = await Promise.all([fullPromise, charactersPromise, recommendationsPromise]);
+      const fetchPromises = [
+      fetch('https://api.jikan.moe/v4/anime/' + id + '/full'),
+      new Promise(resolve => setTimeout(resolve, 1000)),
+      fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'),
+      new Promise(resolve => setTimeout(resolve, 1000)),
+      fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations'),
+    ];
+      // const fullPromise = fetch('https://api.jikan.moe/v4/anime/' + id + '/full');
+      // const charactersPromise = new Promise((resolve) => sleep(500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/characters'));
+      // const recommendationsPromise = new Promise((resolve) => sleep(500)).then(() => fetch('https://api.jikan.moe/v4/anime/' + id + '/recommendations'));
+      const [full, _, characters, __, recommendations] = await Promise.all(fetchPromises);
       if (full.ok && characters.ok && recommendations.ok) {
-        await sleep(2000);
         animeCharRingkas = {};
         const data = await full.json();
         const dataChar = await characters.json();
@@ -433,7 +440,10 @@
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
-                <h2 class="h2">Studios</h2>
+                <div class="flex items-center">
+                  <Icon icon="fluent-emoji:movie-camera" width="32px" class="mr-4"/>
+                  <h2 class="h2">Studio</h2>
+                </div>
                 <article class="opacity-50">
                   <p>
                     {#if anime}
@@ -457,7 +467,10 @@
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
-                <h2 class="h2">Status</h2>
+                <div class="flex items-center">
+                  <Icon icon="fluent-emoji:green-circle" width="32px" class="mr-4"/>
+                  <h2 class="h2">Status</h2>
+                </div>
                 <article class="opacity-50">
                   {#if anime}
                     <p>{anime?.status ? anime.status : 'Not Identified'}</p>
@@ -471,7 +484,10 @@
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
-                <h2 class="h2">Addition</h2>
+                <div class="flex items-center">
+                  <Icon icon="fluent-emoji:bento-box" width="32px" class="mr-4"/>
+                  <h2 class="h2">Addition</h2>
+                </div>
                 <article class="opacity-50">
                   {#if anime}
                     <p>Type: {anime?.type ? anime.type : '....'}</p>
@@ -485,9 +501,12 @@
           <div>
             <a class="card variant-ghost-primary card-hover overflow-hidden" href="#">
               <div class="p-4">
-                <h2 class="h2">Trailer</h2>
+                <div class="flex items-center">
+                  <Icon icon="fluent-emoji:videocassette" width="32px" class="mr-4"/>
+                  <h2 class="h2">Trailer</h2>
+                </div>
                 <article class="opacity-100">
-                  <div class="pt-1">
+                  <div class="pt-1.5">
                     {#if anime}
                       <iframe title="trailer" class="w-full aspect-video rounded-lg" src={anime?.trailer.embed_url !== null ? String(anime.trailer.embed_url).replace('autoplay=1', 'autoplay=0') : 'https://youtube.com/embed/DJfg39WkMvE?si=L-wDgs0C66FudOyI?enablejsapi=1&wmode=opaque&autoplay=0'} allowfullscreen></iframe>
                     {/if}
@@ -498,7 +517,10 @@
           </div>
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4">
-              <h2 class="h2">Characters</h2>
+              <div class="flex items-center">
+                <Icon icon="fluent-emoji:goblin" width="32px" class="mr-4"/>
+                <h2 class="h2">Characters</h2>
+              </div>
               <article>
                 <div class="opacity-50 pb-2">List of characters that played</div>
                 <swiper-container bind:this={swiper} free-mode="true">
@@ -510,10 +532,10 @@
                       <div class="relative">
                         <img alt={index} class="object-cover rounded-t-lg px-0.5" src={animeCharRingkas[index][1]} />
                         <div class="absolute text-center bottom-0 left-0 right-0 mx-0.5 bg-black opacity-60">
-                          <p class="text-sm text-gray-300">{index}</p>
+                          <p class="text-sm text-white opacity-100">{index}</p>
                         </div>
                         <div class="absolute text-center top-0 left-0 right-0 mx-0.5 bg-black opacity-60 rounded-t-md">
-                          <p class="text-sm text-gray-300">❤️‍🔥 {animeCharRingkas[index][0]}</p>
+                          <p class="text-sm text-white opacity-100">❤️‍🔥 {animeCharRingkas[index][0]}</p>
                         </div>
                       </div>
 
@@ -521,7 +543,7 @@
                         <div class="relative">
                           <img alt={animeCharRingkas[index][2]} class="object-cover rounded-b-lg px-0.5" src={animeCharRingkas[index].length > 4 ? animeCharRingkas[index][4] : animeCharRingkas[index][3]} />
                           <div class="absolute text-center top-0 left-0 right-0 bg-black opacity-60">
-                            <p class="text-sm text-gray-300">{animeCharRingkas[index][2]}</p>
+                            <p class="text-sm text-white opacity-100">{animeCharRingkas[index][2]}</p>
                           </div>
                         </div>
                       {/if}
@@ -542,14 +564,14 @@
             <div class="flex pt-2grid grid-cols-2 grid-rows-1 gap-2">
               <Accordion>
                 <AccordionItem hover="!bg-transparent" open>
-                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beer-mug" width="32px" /></svelte:fragment>
+                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:open-book" width="32px" /></svelte:fragment>
                   <svelte:fragment slot="summary"><h2 class="h2">Synopsys</h2></svelte:fragment>
                   <svelte:fragment slot="content">
                     {anime?.synopsis ? anime?.synopsis : 'Anime Not Found'}
                   </svelte:fragment>
                 </AccordionItem>
                 <AccordionItem hover="!bg-transparent" open>
-                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:beach-with-umbrella" width="32px" /></svelte:fragment>
+                  <svelte:fragment slot="lead"><Icon icon="fluent-emoji:clapper-board" width="32px" /></svelte:fragment>
                   <svelte:fragment slot="summary"><h2 class="h2">Background</h2></svelte:fragment>
                   <svelte:fragment slot="content">{anime?.background ? anime?.background : 'Background not found, perhaps you can contribute it?'}</svelte:fragment>
                 </AccordionItem>
@@ -558,7 +580,10 @@
           </div>
           <div class="col-span-2 xl:col-span-4">
             <div class="p-4">
-              <h2 class="h2">Look 'a Like</h2>
+              <div class="flex items-center">
+                <Icon icon="fluent-emoji:beans" width="32px" class="mr-4"/>
+                <h2 class="h2">Look a' Like</h2>
+              </div>
               <article>
                 <div class="opacity-50 pb-2">List of anime that lookalike</div>
                 <swiper-container bind:this={swiper_recom} free-mode="true">
@@ -567,12 +592,12 @@
                       <swiper-slide>
                         <a href="/weeb/{recom.entry.mal_id}">
                         <div class=" transition-transform active:translate-x-95 active:translate-y-95 active:rotate-0 active:skew-x-0 active:skew-y-0 active:scale-x-95 active:scale-y-95 active:brightness-90">
-                          <img alt={recom.entry.title} class="object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
-                          <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60">
-                            <p class="text-sm text-gray-300 m-0">{recom.entry.title}</p>
+                          <img alt={recom.entry.title} class=" object-cover rounded-lg p-0.5" src={recom.entry.images.jpg.image_url} />
+                          <div class="absolute text-center bottom-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-b-md">
+                            <p class="text-sm text-white opacity-100 m-0">{recom.entry.title}</p>
                           </div>
                           <div class="absolute text-center top-0 left-0 right-0 m-0.5 bg-black opacity-60 rounded-t-md">
-                            <p class="text-sm text-gray-300 ">❤️‍🔥 {recom.votes}</p>
+                            <p class="text-sm text-white opacity-100 ">❤️‍🔥 {recom.votes}</p>
                           </div>
                         </div>
                       </a>
